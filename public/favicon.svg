@@ -1,0 +1,22 @@
+<svg width="128" height="128" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg"> 
+<!--背景-->
+<rect width="128" height="128" fill="white"/>
+<!--耳朵-->
+<circle cx="32" cy="32" r="14" fill="#111111"/>
+<circle cx="96" cy="32" r="14" fill="#111111"/>
+<!--头部-->
+<circle cx="64" cy="64" r="48" fill="#fff"/>
+<!--眼圈-->
+<ellipse cx="44" cy="60" rx="12" ry="14" fill="#111111"/>
+<ellipse cx="84" cy="60" rx="12" ry="14" fill="#111111"/>
+<!--眼睛-->
+<circle cx="44" cy="60" r="5" fill="#fff"/>
+<circle cx="84" cy="60" r="5" fill="#fff"/>
+<circle cx="45" cy="59" r="2" fill="#fff"/>
+<circle cx="85" cy="59" r="2" fill="#fff"/>
+<!--鼻子-->
+<ellipse cx="64" cy="76" rx="6" ry="5" fill="#111111"/>
+<!--嘴巴-->
+<path d="M 64 81 Q 60 86 56 84" stroke="#111111" stroke-width="1.5" fill="none" />
+<path d="M 64 81 Q 68 86 72 84" stroke="#111111" stroke-width="1.5" fill="none" />
+</svg>
