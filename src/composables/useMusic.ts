@@ -77,6 +77,9 @@ export function useMusic() {
     audioElement.src = track.url
     audioElement.load()
     console.log('已加载歌曲:', currentTrack.value)
+    
+    // 更新 Media Session 元数据
+    updateMediaSessionMetadata(track)
   }
 
   // 播放下一首（随机）
@@ -95,6 +98,84 @@ export function useMusic() {
     }
   }
 
+  // 播放上一首（随机）
+  const playPrevTrack = () => {
+    let prevIndex
+    do {
+      prevIndex = Math.floor(Math.random() * musicFiles.length)
+    } while (prevIndex === currentTrackIndex && musicFiles.length > 1)
+    
+    loadTrack(prevIndex)
+    
+    if (isPlaying.value && audioElement) {
+      audioElement.play().catch(err => {
+        console.error('自动播放失败:', err)
+      })
+    }
+  }
+
+  // 更新 Media Session 元数据
+  const updateMediaSessionMetadata = (track: MusicTrack) => {
+    if ('mediaSession' in navigator) {
+      navigator.mediaSession.metadata = new MediaMetadata({
+        title: track.name,
+        artist: 'Moyhuai',
+        album: 'Personal Playlist',
+        artwork: [
+          { src: '/favicon.svg', sizes: '512x512', type: 'image/svg+xml' }
+        ]
+      })
+    }
+  }
+
+  // 更新 Media Session 播放状态
+  const updateMediaSessionPlaybackState = () => {
+    if ('mediaSession' in navigator) {
+      navigator.mediaSession.playbackState = isPlaying.value ? 'playing' : 'paused'
+    }
+  }
+
+  // 初始化 Media Session API
+  const initMediaSession = () => {
+    if (!('mediaSession' in navigator)) {
+      console.log('浏览器不支持 Media Session API')
+      return
+    }
+
+    // 设置初始元数据
+    updateMediaSessionMetadata(musicFiles[0])
+
+    // 设置播放控制处理器
+    navigator.mediaSession.setActionHandler('play', () => {
+      if (!isPlaying.value) {
+        toggleMusic()
+      }
+    })
+
+    navigator.mediaSession.setActionHandler('pause', () => {
+      if (isPlaying.value) {
+        toggleMusic()
+      }
+    })
+
+    navigator.mediaSession.setActionHandler('previoustrack', () => {
+      playPrevTrack()
+    })
+
+    navigator.mediaSession.setActionHandler('nexttrack', () => {
+      playNextTrack()
+    })
+
+    // 监听音频播放状态变化，同步到 Media Session
+    audioElement?.addEventListener('play', () => {
+      updateMediaSessionPlaybackState()
+    })
+
+    audioElement?.addEventListener('pause', () => {
+      updateMediaSessionPlaybackState()
+    })
+  }
+
   // 初始化音乐状态
   onMounted(() => {
     // 从 localStorage 恢复音乐状态
@@ -105,6 +186,9 @@ export function useMusic() {
     
     // 初始化音频元素
     initAudio()
+    
+    // 初始化 Media Session API
+    initMediaSession()
   })
 
   // 组件卸载时清理

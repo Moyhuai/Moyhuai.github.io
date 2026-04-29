@@ -86,7 +86,29 @@ const showSettings = ref(false)
             />
           </button>
 
-          <!-- 音乐控制 -->
+         
+          <!-- 语言切换 -->
+          <button
+            @click="$emit('toggleLanguage')"
+            class="w-full px-4 py-3 flex items-center justify-between hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200 border-t border-gray-200 dark:border-gray-700"
+          >
+            <div class="flex items-center gap-3">
+              <van-icon
+                name="checked"
+                class="text-green-500"
+                size="18"
+              />
+              <span class="text-sm text-gray-700 dark:text-gray-300">
+                {{ isChinese ? '英文' : 'Chinese' }}
+              </span>
+            </div>
+            <van-icon
+              name="translator"
+              size="20"
+              class="text-orange-500"
+            />
+          </button>
+           <!-- 音乐控制 -->
           <button
             @click="$emit('toggleMusic')"
             class="w-full px-4 py-3 flex items-center justify-between hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200 border-t border-gray-200 dark:border-gray-700"
@@ -113,27 +135,6 @@ const showSettings = ref(false)
             />
           </button>
 
-          <!-- 语言切换 -->
-          <button
-            @click="$emit('toggleLanguage')"
-            class="w-full px-4 py-3 flex items-center justify-between hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200 border-t border-gray-200 dark:border-gray-700"
-          >
-            <div class="flex items-center gap-3">
-              <van-icon
-                name="checked"
-                class="text-green-500"
-                size="18"
-              />
-              <span class="text-sm text-gray-700 dark:text-gray-300">
-                {{ isChinese ? '英文' : 'Chinese' }}
-              </span>
-            </div>
-            <van-icon
-              name="translator"
-              size="20"
-              class="text-orange-500"
-            />
-          </button>
         </div>
       </transition>
     </div>
