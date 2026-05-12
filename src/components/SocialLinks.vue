@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { Github } from 'lucide-vue-next'
 import type { SocialLink } from '../types'
 
 defineProps<{
@@ -23,10 +24,9 @@ defineProps<{
         :class="link.color"
       ></div>
       
-      <van-icon
-        :name="link.icon"
-        size="20"
-        class="relative z-10 text-gray-700 dark:text-gray-300 group-hover:text-current transition-colors duration-300"
+      <Github
+        v-if="link.name === 'GitHub'"
+        class="w-5 h-5 relative z-10 text-gray-700 dark:text-gray-300 group-hover:text-current transition-colors duration-300"
       />
       <span class="relative z-10 text-sm font-medium text-gray-700 dark:text-gray-300 group-hover:text-current transition-colors duration-300">
         {{ link.name }}

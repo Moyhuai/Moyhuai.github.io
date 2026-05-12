@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ArrowRight } from 'lucide-vue-next'
 import type { Project } from '../types'
 
 defineProps<{
@@ -26,10 +27,8 @@ defineProps<{
           <h4 class="font-semibold text-base text-gray-900 dark:text-white transition-colors duration-300">
             {{ project.title }}
           </h4>
-          <van-icon 
-            name="arrow" 
-            class="text-gray-400 transition-all duration-300"
-            size="16"
+          <ArrowRight 
+            class="w-4 h-4 text-gray-400 transition-all duration-300"
           />
         </div>
         <p class="text-xs text-gray-600 dark:text-gray-400 mb-2">
