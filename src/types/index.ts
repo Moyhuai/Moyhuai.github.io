@@ -11,6 +11,10 @@ export interface Project {
   description: string
   url: string
   tech: string[]
+  stars?: number
+  forks?: number
+  updatedAt?: string
+  homepage?: string | null
 }
 
 // i18n 配置类型

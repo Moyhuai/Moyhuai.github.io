@@ -9,22 +9,48 @@ import BackgroundBlobs from './components/BackgroundBlobs.vue'
 import { useDarkMode } from './composables/useDarkMode'
 import { useLanguage } from './composables/useLanguage'
 import { useMusic } from './composables/useMusic'
-import { useDeviceView } from './composables/useDeviceView'
+
 import { socialLinks } from './data/socialLinks'
 import { i18n } from './data/i18n'
+import { assets } from './data/assets'
+import { Menu, Sun } from 'lucide-vue-next'
 
 // 页面加载动画
 const isLoaded = ref(false)
 const showLoading = ref(true)
+const showSettings = ref(false)
 
 // 使用 Composables
 const { isDarkMode, toggleDarkMode } = useDarkMode()
 const { isChinese, toggleLanguage } = useLanguage()
 const { isPlaying: isMusicPlaying, currentTrack, toggleMusic } = useMusic()
-const { containerClass } = useDeviceView()
+
+
+// 获取当前时间
+const currentTime = ref(new Date())
+const timeString = ref('')
+const dateString = ref('')
+
+const updateTime = () => {
+  const now = new Date()
+  currentTime.value = now
+  const hours = String(now.getHours()).padStart(2, '0')
+  const minutes = String(now.getMinutes()).padStart(2, '0')
+  const seconds = String(now.getSeconds()).padStart(2, '0')
+  timeString.value = `${hours}:${minutes}:${seconds}`
+  
+  const weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+  const months = ['January', 'February', 'March', 'April', 'May', 'June', 
+                  'July', 'August', 'September', 'October', 'November', 'December']
+  dateString.value = `${weekdays[now.getDay()]}, ${now.getDate()} ${months[now.getMonth()]}.`
+}
 
 onMounted(() => {
-  // 模拟加载时间，实际项目中可以根据资源加载情况调整
+  // 更新时间
+  updateTime()
+  setInterval(updateTime, 1000)
+  
+  // 模拟加载时间
   setTimeout(() => {
     showLoading.value = false
     setTimeout(() => {
@@ -32,10 +58,14 @@ onMounted(() => {
     }, 500)
   }, 2000)
 })
+
+const toggleSettings = () => {
+  showSettings.value = !showSettings.value
+}
 </script>
 
 <template>
-  <div class="theme-transition min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+  <div class="theme-transition min-h-screen bg-gradient-to-br from-sky-50 via-white to-teal-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
     
     <!-- 加载页面组件 -->
     <LoadingScreen :is-visible="showLoading" />
@@ -43,52 +73,132 @@ onMounted(() => {
     <!-- 背景装饰元素组件 -->
     <BackgroundBlobs />
 
-    <!-- 主要内容容器 -->
-    <div class="relative flex flex-col items-center justify-center min-h-screen px-4 py-8 md:py-16">
-      
-      <!-- 外围框架 -->
-      <div class="relative w-full max-w-3xl mx-auto bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm rounded-2xl border border-gray-200 dark:border-gray-700 shadow-xl p-6 md:p-10">
-        
-        <!-- 设置菜单组件 -->
-        <SettingsMenu
-          :is-dark-mode="isDarkMode"
-          :is-music-playing="isMusicPlaying"
-          :current-track="currentTrack"
-          :is-chinese="isChinese"
-          @toggle-dark-mode="toggleDarkMode"
-          @toggle-music="toggleMusic"
-          @toggle-language="toggleLanguage"
-        />
-        
-        <!-- 个人卡片组件 -->
-        <div 
-          :class="[containerClass, 'w-full mx-auto transform transition-all duration-700', isLoaded ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0']"
-        >
-          <ProfileCard :is-loaded="isLoaded" />
-
-          <!-- 社交链接组件 -->
-          <SocialLinks :links="socialLinks" />
-
-          <!-- 项目列表组件 -->
-          <ProjectList
-            :title="i18n[isChinese ? 'zh' : 'en'].featuredProjects"
-            :projects="i18n[isChinese ? 'zh' : 'en'].projects"
+    <!-- 顶部导航栏 -->
+    <nav class="relative z-10 bg-sky-100/80 dark:bg-gray-800/80 backdrop-blur-md border-b border-sky-200/50 dark:border-gray-700/50 px-6 py-2">
+      <div class="max-w-7xl mx-auto flex items-center justify-between">
+        <!-- Logo 区域 -->
+        <div class="flex items-center gap-2 ">
+          <img 
+            :src="assets.avatar" 
+            alt="Logo"
+            class="w-18 h-18 rounded-full"
           />
+          <div class="flex flex-col gap-5 ">
+            <div class="flex items-baseline gap-0.5 ">
+              <span class="text-xl font-bold text-black dark:text-gray-200 italic">Moyhuai</span>
+              <span class="text-sm text-gray-500 dark:text-gray-400 italic">| MyIndex</span>
+            </div>
+        
+          </div>
+        </div>
 
-          <!-- 底部信息 -->
-          <div class="text-center pt-6 border-t border-gray-200 dark:border-gray-700">
-            <p class="text-sm text-gray-500 dark:text-gray-500 mb-2">
-              {{ i18n[isChinese ? 'zh' : 'en'].copyright }}
-            </p>
-            <div class="flex justify-center items-center gap-2 text-xs text-gray-400 dark:text-gray-600">
-              <span>{{ i18n[isChinese ? 'zh' : 'en'].madeWith }}</span>
-              <span class="text-red-500 animate-pulse">❤️</span>
-              <span>{{ i18n[isChinese ? 'zh' : 'en'].andCoffee }}</span>
+        <!-- 右侧操作按钮 -->
+        <div class="flex items-center gap-3">
+          <button
+            @click="toggleDarkMode"
+            class="p-2 rounded-full hover:bg-white/50 dark:hover:bg-gray-700/50 transition-all duration-300"
+            title="切换主题"
+          >
+            <Sun v-if="isDarkMode" class="w-5 h-5 text-gray-600 dark:text-gray-300" />
+            <Sun v-else class="w-5 h-5 text-gray-600 dark:text-gray-300" />
+          </button>
+          <button
+            @click="toggleSettings"
+            class="p-2 rounded-full hover:bg-white/50 dark:hover:bg-gray-700/50 transition-all duration-300"
+            title="打开设置菜单"
+          >
+            <Menu class="w-6 h-6 text-teal-600 dark:text-teal-400" />
+          </button>
+        </div>
+      </div>
+    </nav>
+
+    <!-- 设置菜单 (悬浮显示) -->
+    <SettingsMenu
+      v-if="showSettings"
+      :is-dark-mode="isDarkMode"
+      :is-music-playing="isMusicPlaying"
+      :current-track="currentTrack"
+      :is-chinese="isChinese"
+      @toggle-dark-mode="toggleDarkMode"
+      @toggle-music="toggleMusic"
+      @toggle-language="toggleLanguage"
+      class="fixed top-20 right-6 z-50"
+    />
+
+    <!-- 主内容区 -->
+    <main class="relative z-10 px-4 py-12 md:py-16">
+      <div class="max-w-5xl mx-auto">
+        
+        <!-- 双列布局 -->
+        <div 
+          :class="[
+            'grid gap-6 md:grid-cols-2 transform transition-all duration-700',
+            isLoaded ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'
+          ]"
+        >
+          
+          <!-- 左侧列 -->
+          <div class="space-y-6">
+            <!-- 头像卡片 -->
+            <div class="bg-gradient-to-br from-sky-100/80 to-teal-100/80 dark:from-gray-800/80 dark:to-gray-700/80 backdrop-blur-md rounded-3xl p-8 shadow-lg border border-sky-200/50 dark:border-gray-700/50">
+              <ProfileCard :is-loaded="isLoaded" />
+            </div>
+
+            <!-- 名言卡片 -->
+            <div class="bg-sky-50/80 dark:bg-gray-800/60 backdrop-blur-md rounded-2xl p-6 shadow-md border border-sky-100/50 dark:border-gray-700/50">
+              <div class="flex items-start gap-3">
+                <span class="text-3xl text-teal-500 font-serif">"</span>
+                <p class="text-gray-700 dark:text-gray-300 italic flex-1">
+                  
+                </p>
+              </div>
+            </div>
+
+            <!-- 社交链接 -->
+            <SocialLinks :links="socialLinks" />
+          </div>
+
+          <!-- 右侧列 -->
+          <div class="space-y-6">
+            <!-- 时间卡片 -->
+            <div class="bg-gradient-to-br from-sky-200/80 to-teal-200/80 dark:from-gray-700/80 dark:to-gray-600/80 backdrop-blur-md rounded-2xl p-6 shadow-lg border border-sky-300/50 dark:border-gray-600/50">
+              <div class="text-5xl font-bold text-gray-700 dark:text-gray-200 mb-3 font-mono">
+                {{ timeString }}
+              </div>
+              <div class="text-lg text-gray-600 dark:text-gray-400 italic">
+                {{ dateString }}
+              </div>
+              <div class="mt-4 pt-4 border-t border-sky-300/30 dark:border-gray-600/30">
+                <p class="text-sm text-gray-600 dark:text-gray-400">
+                  没对象怕什么,我有对象,我下棋也没赢过啊。
+                </p>
+                <p class="text-xs text-gray-500 dark:text-gray-500 mt-1 text-right">
+                  —— 《憨憨语录》
+                </p>
+              </div>
+            </div>
+
+            <!-- 项目列表 -->
+            <ProjectList
+              :title="i18n[isChinese ? 'zh' : 'en'].featuredProjects"
+              github-username="moyhuai"
+            />
+            
+
+            <!-- 展示更多按钮 -->
+            <div class="text-center">
+              <button class="px-6 py-3 bg-sky-100/80 dark:bg-gray-800/80 backdrop-blur-md rounded-full border-2 border-teal-500/50 dark:border-teal-400/50 text-gray-700 dark:text-gray-300 hover:bg-sky-200/80 dark:hover:bg-gray-700/80 transition-all duration-300 hover:scale-105">
+                <span class="flex items-center justify-center gap-2">
+                  <span>📦</span>
+                  <span>展示更多仓库</span>
+                </span>
+              </button>
             </div>
           </div>
         </div>
-      </div>
-    </div>
+</div>
+    </main>
   </div>
 </template>
 

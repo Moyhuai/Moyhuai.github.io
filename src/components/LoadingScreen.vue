@@ -17,10 +17,6 @@ defineProps<{
       <div class="flex flex-col items-center gap-6">
         <!-- 头像 -->
         <div class="relative group">
-          <!-- 多层渐变光晕 -->
-          <div class="absolute -inset-4 bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 rounded-full blur-2xl opacity-40 animate-gradient"></div>
-          <div class="absolute -inset-2 bg-gradient-to-r from-blue-500 via-purple-600 to-pink-600 rounded-full blur-xl opacity-30"></div>
-          
           <img
             :src="assets.avatar"
             alt="Moyhuai"
@@ -28,8 +24,7 @@ defineProps<{
             @error="(e: any) => e.target.src = assets.avatar"
           />
         </div>
-
-        <!-- 名字 -->
+      <!-- 名字 -->
         <h1 class="text-4xl md:text-5xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent animate-pulse tracking-tight">
           Moyhuai
         </h1>
