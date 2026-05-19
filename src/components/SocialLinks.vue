@@ -28,9 +28,6 @@ defineProps<{
         v-if="link.name === 'GitHub'"
         class="w-5 h-5 relative z-10 text-gray-700 dark:text-gray-300 group-hover:text-current transition-colors duration-300"
       />
-      <span class="relative z-10 text-sm font-medium text-gray-700 dark:text-gray-300 group-hover:text-current transition-colors duration-300">
-        {{ link.name }}
-      </span>
     </a>
   </div>
 </template>

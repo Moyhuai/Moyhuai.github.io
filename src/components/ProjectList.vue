@@ -81,14 +81,14 @@ const displayProjects = props.projects || githubProjects
           <span
             v-for="tech in project.tech"
             :key="tech"
-            class="px-2 py-0.5 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/30 dark:to-purple-900/30 text-gray-700 dark:text-gray-300 text-xs rounded-md border border-blue-100 dark:border-blue-800/50"
+            class="px-2 py-0.5 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/30 dark:to-purple-900/30 text-gray-700 dark:text-gray-300 text-xs rounded-md"
           >
             {{ tech }}
           </span>
         </div>
         
         <!-- 项目统计信息 -->
-        <div class="flex items-center gap-4 text-xs text-gray-500 dark:text-gray-400 pt-2 border-t border-gray-100 dark:border-gray-700">
+        <div class="flex items-center gap-4 text-xs text-gray-500 dark:text-gray-400 pt-2">
           <div v-if="project.stars !== undefined" class="flex items-center gap-1">
             <Star class="w-3.5 h-3.5" />
             <span>{{ project.stars }}</span>

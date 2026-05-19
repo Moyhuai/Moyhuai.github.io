@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { assets } from '../data/assets'
 
 defineProps<{
   isLoaded: boolean
@@ -12,10 +11,10 @@ defineProps<{
     <!-- 头像 -->
     <div class="relative mb-8">
       <img
-        :src="assets.avatar"
+        src="/avatar.png"
         alt="Moyhuai"
-        class="relative w-44 h-44 md:w-52 md:h-52 rounded-full border-4 border-white dark:border-gray-700 shadow-2xl object-cover transition-all duration-500 ease-in-out"
-        @error="(e: any) => e.target.src = assets.avatar"
+        class="relative w-44 h-44 md:w-52 md:h-52 rounded-full shadow-2xl object-cover transition-all duration-500 ease-in-out"
+        @error="(e: any) => e.target.src = '/avatar.png'"
       />
       </div>
 

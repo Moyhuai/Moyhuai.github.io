@@ -15,74 +15,33 @@ const musicFiles: MusicTrack[] = [
   {
     name: '再见',
     artist: '张震岳',
-    url: new URL('../assets/music/再见.mp3', import.meta.url).href,
+    url: new URL('/music/再见.mp3', import.meta.url).href,
     cover: '/favicon.svg',
     lyrics: [
-      '我怕我没有机会',
-      '跟你说一声再见',
-      '因为也许就再也见不到面',
-      '明天我要离开熟悉的地方和你',
-      '要分离我眼泪就掉下去',
-      '',
-      '我会牢牢记住你的脸',
-      '我会珍惜你给的思念',
-      '这些日子在我心中永远都不会抹去',
-      '',
-      '我不能答应你',
-      '我是否会再回来',
-      '我不回头不回头的走下去'
     ]
   },
   {
     name: '唯一',
     artist: '告五人',
-    url: new URL('../assets/music/唯一.mp3', import.meta.url).href,
+    url: new URL('/music/唯一.mp3', import.meta.url).href,
     cover: '/favicon.svg',
     lyrics: [
-      '你真的懂唯一的定义',
-      '并不简单如呼吸',
-      '你真的希望你能厘清',
-      '若没交心怎么说明',
-      '我真的爱你',
-      '句句不轻易',
-      '',
-      '眼神中飘曳',
-      '总是在不经意',
-      '露出讯息'
     ]
   },
   {
     name: '小城夏天',
     artist: 'LBI利比',
-    url: new URL('../assets/music/小城夏天.mp3', import.meta.url).href,
+    url: new URL('/music/小城夏天.mp3', import.meta.url).href,
     cover: '/favicon.svg',
     lyrics: [
-      '晚风吹过耳畔你显得很好看',
-      '微醺的傍晚时间过很慢',
-      '路灯的光线有一点刺眼',
-      '想靠近一点又怕太明显',
-      '',
-      '橘黄色的日落吞没在海平线',
-      '夜色慢慢展开露出星光点点',
-      '我听着耳机中Jay的音乐',
-      '从等你下课到手写的从前'
     ]
   },
   {
     name: '泡沫',
     artist: 'G.E.M.邓紫棋',
-    url: new URL('../assets/music/泡沫.mp3', import.meta.url).href,
+    url: new URL('/music/泡沫.mp3', import.meta.url).href,
     cover: '/favicon.svg',
     lyrics: [
-      '阳光下的泡沫是彩色的',
-      '就像被骗的我是幸福的',
-      '追究什么对错你的谎言',
-      '基于你还爱我',
-      '',
-      '美丽的泡沫虽然一刹花火',
-      '你所有承诺虽然都太脆弱',
-      '但爱像泡沫如果能够看破',
-      '有什么难过'
     ]
   }
 ]

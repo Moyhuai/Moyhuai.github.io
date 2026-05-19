@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { MoonIcon, LanguagesIcon, CheckIcon, XIcon, PauseIcon, PlayIcon, Volume2Icon, VolumeXIcon } from 'lucide-vue-next'
+import { LanguagesIcon, CheckIcon, PauseIcon, PlayIcon, Volume2Icon, VolumeXIcon } from 'lucide-vue-next'
 
 const props = defineProps<{
   isDarkMode: boolean
@@ -29,7 +29,7 @@ const emit = defineEmits<{
       class="w-56 bg-white dark:bg-gray-800 rounded-xl shadow-2xl border border-gray-200 dark:border-gray-700 overflow-hidden"
     >
       <!-- 暗黑模式切换 -->
-      <button
+      <!-- <button
         @click="$emit('toggleDarkMode')"
         class="w-full px-4 py-3 flex items-center justify-between hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200"
       >
@@ -52,7 +52,7 @@ const emit = defineEmits<{
           :size="20"
           class="text-purple-500"
         />
-      </button>
+      </button> -->
 
      
       <!-- 语言切换 -->

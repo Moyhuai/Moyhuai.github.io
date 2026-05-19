@@ -17,7 +17,7 @@ interface GitHubRepo {
 
 const CACHE_KEY = 'github_projects_cache'
 const CACHE_EXPIRY_KEY = 'github_projects_cache_expiry'
-const CACHE_DURATION = 24 * 60 * 60 * 1000 // 24小时缓存
+const CACHE_DURATION = 1 * 60 * 60 * 1000 // 1小时缓存
 
 export function useGitHubProjects(username: string = 'moyhuai') {
   const projects = ref<Project[]>([])
@@ -84,8 +84,7 @@ export function useGitHubProjects(username: string = 'moyhuai') {
         .filter(repo => !repo.fork) // 过滤掉 fork 的仓库
         .map(repo => {
           // 格式化更新时间
-          const updateDate = new Date(repo.updated_at)
-          const timeAgo = getTimeAgo(updateDate)
+          const timeAgo = formatDate(repo.updated_at)
           
           return {
             title: repo.name,
@@ -120,28 +119,24 @@ export function useGitHubProjects(username: string = 'moyhuai') {
     }
   }
 
-  // 计算相对时间
-  const getTimeAgo = (date: Date): string => {
-    const now = new Date()
-    const seconds = Math.floor((now.getTime() - date.getTime()) / 1000)
-    
-    let interval = seconds / 31536000
-    if (interval > 1) return Math.floor(interval) + '年前更新'
-    
-    interval = seconds / 2592000
-    if (interval > 1) return Math.floor(interval) + '个月前更新'
-    
-    interval = seconds / 86400
-    if (interval > 1) return Math.floor(interval) + '天前更新'
-    
-    interval = seconds / 3600
-    if (interval > 1) return Math.floor(interval) + '小时前更新'
-    
-    interval = seconds / 60
-    if (interval > 1) return Math.floor(interval) + '分钟前更新'
-    
-    return '刚刚更新'
-  }
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffMs = now.getTime() - date.getTime();
+    const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+
+    if (diffDays === 0) {
+        return "今天";
+    } else if (diffDays === 1) {
+        return "昨天";
+    } else if (diffDays < 30) {
+        return `${diffDays} 天前`
+    } else if (diffDays < 365) {
+        return `${Math.floor(diffDays / 30)} 个月前}`
+    } else {
+        return `${Math.floor(diffDays / 365)} 年前`
+    }
+};
 
   onMounted(() => {
     fetchProjects()

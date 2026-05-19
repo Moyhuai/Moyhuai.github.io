@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import LoadingScreen from './components/LoadingScreen.vue'
 import ProfileCard from './components/ProfileCard.vue'
 import SocialLinks from './components/SocialLinks.vue'
 import ProjectList from './components/ProjectList.vue'
@@ -12,13 +11,11 @@ import { useMusic } from './composables/useMusic'
 
 import { socialLinks } from './data/socialLinks'
 import { i18n } from './data/i18n'
-import { assets } from './data/assets'
 import { Menu, Sun } from 'lucide-vue-next'
+import { onClickOutside } from '@vueuse/core'
 
-// 页面加载动画
-const isLoaded = ref(false)
-const showLoading = ref(true)
 const showSettings = ref(false)
+const isLoaded = ref(false)
 
 // 使用 Composables
 const { isDarkMode, toggleDarkMode } = useDarkMode()
@@ -38,10 +35,10 @@ const updateTime = () => {
   const minutes = String(now.getMinutes()).padStart(2, '0')
   const seconds = String(now.getSeconds()).padStart(2, '0')
   timeString.value = `${hours}:${minutes}:${seconds}`
-  
+
   const weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
-  const months = ['January', 'February', 'March', 'April', 'May', 'June', 
-                  'July', 'August', 'September', 'October', 'November', 'December']
+  const months = ['January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December']
   dateString.value = `${weekdays[now.getDay()]}, ${now.getDate()} ${months[now.getMonth()]}.`
 }
 
@@ -49,64 +46,58 @@ onMounted(() => {
   // 更新时间
   updateTime()
   setInterval(updateTime, 1000)
-  
-  // 模拟加载时间
-  setTimeout(() => {
-    showLoading.value = false
-    setTimeout(() => {
-      isLoaded.value = true
-    }, 500)
-  }, 2000)
+
+  const loadEle = document.getElementById("loading-screen");
+  if (loadEle) {
+    loadEle.classList.add("hide");
+    isLoaded.value = true;
+  }
 })
 
 const toggleSettings = () => {
   showSettings.value = !showSettings.value
 }
+
+const SettingsMenuRef = ref();
+
+onClickOutside(SettingsMenuRef, () => {
+  showSettings.value = false;
+});
+
 </script>
 
 <template>
-  <div class="theme-transition min-h-screen bg-gradient-to-br from-sky-50 via-white to-teal-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
-    
-    <!-- 加载页面组件 -->
-    <LoadingScreen :is-visible="showLoading" />
-    
-    <!-- 背景装饰元素组件 -->
+  <div
+    class="theme-transition min-h-screen bg-linear-to-br from-sky-50 via-white to-teal-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
     <BackgroundBlobs />
 
     <!-- 顶部导航栏 -->
-    <nav class="relative z-10 bg-sky-100/80 dark:bg-gray-800/80 backdrop-blur-md border-b border-sky-200/50 dark:border-gray-700/50 px-6 py-2">
+    <nav
+      class="relative z-10 bg-sky-100/80 dark:bg-gray-800/80 backdrop-blur-md px-6 py-2">
       <div class="max-w-7xl mx-auto flex items-center justify-between">
         <!-- Logo 区域 -->
         <div class="flex items-center gap-2 ">
-          <img 
-            :src="assets.avatar" 
-            alt="Logo"
-            class="w-18 h-18 rounded-full"
-          />
+          <img src="/avatar.png" alt="Logo" class="w-18 h-18 rounded-full" />
           <div class="flex flex-col gap-5 ">
             <div class="flex items-baseline gap-0.5 ">
               <span class="text-xl font-bold text-black dark:text-gray-200 italic">Moyhuai</span>
               <span class="text-sm text-gray-500 dark:text-gray-400 italic">| MyIndex</span>
             </div>
-        
+
           </div>
         </div>
 
         <!-- 右侧操作按钮 -->
         <div class="flex items-center gap-3">
-          <button
-            @click="toggleDarkMode"
+          <button @click="toggleDarkMode"
             class="p-2 rounded-full hover:bg-white/50 dark:hover:bg-gray-700/50 transition-all duration-300"
-            title="切换主题"
-          >
+            title="切换主题">
             <Sun v-if="isDarkMode" class="w-5 h-5 text-gray-600 dark:text-gray-300" />
             <Sun v-else class="w-5 h-5 text-gray-600 dark:text-gray-300" />
           </button>
-          <button
-            @click="toggleSettings"
+          <button @click="toggleSettings"
             class="p-2 rounded-full hover:bg-white/50 dark:hover:bg-gray-700/50 transition-all duration-300"
-            title="打开设置菜单"
-          >
+            title="打开设置菜单">
             <Menu class="w-6 h-6 text-teal-600 dark:text-teal-400" />
           </button>
         </div>
@@ -114,43 +105,36 @@ const toggleSettings = () => {
     </nav>
 
     <!-- 设置菜单 (悬浮显示) -->
-    <SettingsMenu
-      v-if="showSettings"
-      :is-dark-mode="isDarkMode"
-      :is-music-playing="isMusicPlaying"
-      :current-track="currentTrack"
-      :is-chinese="isChinese"
-      @toggle-dark-mode="toggleDarkMode"
-      @toggle-music="toggleMusic"
-      @toggle-language="toggleLanguage"
-      class="fixed top-20 right-6 z-50"
-    />
+    <SettingsMenu @blur="showSettings = false" ref="SettingsMenuRef" v-if="showSettings" :is-dark-mode="isDarkMode"
+      :is-music-playing="isMusicPlaying" :current-track="currentTrack" :is-chinese="isChinese"
+      @toggle-dark-mode="toggleDarkMode" @toggle-music="toggleMusic" @toggle-language="toggleLanguage"
+      class="fixed top-20 right-6 z-50" />
 
     <!-- 主内容区 -->
     <main class="relative z-10 px-4 py-12 md:py-16">
       <div class="max-w-5xl mx-auto">
-        
+
         <!-- 双列布局 -->
-        <div 
-          :class="[
-            'grid gap-6 md:grid-cols-2 transform transition-all duration-700',
-            isLoaded ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'
-          ]"
-        >
-          
+        <div :class="[
+          'grid gap-6 md:grid-cols-2 transform transition-all duration-700',
+          isLoaded ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'
+        ]">
+
           <!-- 左侧列 -->
           <div class="space-y-6">
             <!-- 头像卡片 -->
-            <div class="bg-gradient-to-br from-sky-100/80 to-teal-100/80 dark:from-gray-800/80 dark:to-gray-700/80 backdrop-blur-md rounded-3xl p-8 shadow-lg border border-sky-200/50 dark:border-gray-700/50">
+            <div
+              class="bg-linear-to-br from-sky-100/80 to-teal-100/80 dark:from-gray-800/80 dark:to-gray-700/80 backdrop-blur-md rounded-3xl p-8 shadow-lg">
               <ProfileCard :is-loaded="isLoaded" />
             </div>
 
             <!-- 名言卡片 -->
-            <div class="bg-sky-50/80 dark:bg-gray-800/60 backdrop-blur-md rounded-2xl p-6 shadow-md border border-sky-100/50 dark:border-gray-700/50">
+            <div
+              class="bg-sky-50/80 dark:bg-gray-800/60 backdrop-blur-md rounded-2xl p-6 shadow-md">
               <div class="flex items-start gap-3">
                 <span class="text-3xl text-teal-500 font-serif">"</span>
                 <p class="text-gray-700 dark:text-gray-300 italic flex-1">
-                  
+
                 </p>
               </div>
             </div>
@@ -162,14 +146,15 @@ const toggleSettings = () => {
           <!-- 右侧列 -->
           <div class="space-y-6">
             <!-- 时间卡片 -->
-            <div class="bg-gradient-to-br from-sky-200/80 to-teal-200/80 dark:from-gray-700/80 dark:to-gray-600/80 backdrop-blur-md rounded-2xl p-6 shadow-lg border border-sky-300/50 dark:border-gray-600/50">
+            <div
+              class="bg-linear-to-br from-sky-200/80 to-teal-200/80 dark:from-gray-700/80 dark:to-gray-600/80 backdrop-blur-md rounded-2xl p-6 shadow-lg">
               <div class="text-5xl font-bold text-gray-700 dark:text-gray-200 mb-3 font-mono">
                 {{ timeString }}
               </div>
               <div class="text-lg text-gray-600 dark:text-gray-400 italic">
                 {{ dateString }}
               </div>
-              <div class="mt-4 pt-4 border-t border-sky-300/30 dark:border-gray-600/30">
+              <div class="mt-4 pt-4">
                 <p class="text-sm text-gray-600 dark:text-gray-400">
                   没对象怕什么,我有对象,我下棋也没赢过啊。
                 </p>
@@ -180,15 +165,13 @@ const toggleSettings = () => {
             </div>
 
             <!-- 项目列表 -->
-            <ProjectList
-              :title="i18n[isChinese ? 'zh' : 'en'].featuredProjects"
-              github-username="moyhuai"
-            />
-            
+            <ProjectList :title="i18n[isChinese ? 'zh' : 'en'].featuredProjects" github-username="moyhuai" />
+
 
             <!-- 展示更多按钮 -->
             <div class="text-center">
-              <button class="px-6 py-3 bg-sky-100/80 dark:bg-gray-800/80 backdrop-blur-md rounded-full border-2 border-teal-500/50 dark:border-teal-400/50 text-gray-700 dark:text-gray-300 hover:bg-sky-200/80 dark:hover:bg-gray-700/80 transition-all duration-300 hover:scale-105">
+              <button
+                class="px-6 py-3 bg-sky-100/80 dark:bg-gray-800/80 backdrop-blur-md rounded-full text-gray-700 dark:text-gray-300 hover:bg-sky-200/80 dark:hover:bg-gray-700/80 transition-all duration-300 hover:scale-105">
                 <span class="flex items-center justify-center gap-2">
                   <span>📦</span>
                   <span>展示更多仓库</span>
@@ -197,7 +180,7 @@ const toggleSettings = () => {
             </div>
           </div>
         </div>
-</div>
+      </div>
     </main>
   </div>
 </template>
