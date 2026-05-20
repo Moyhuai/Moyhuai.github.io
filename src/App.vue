@@ -80,8 +80,8 @@ onClickOutside(SettingsMenuRef, () => {
           <img src="/avatar.png" alt="Logo" class="w-18 h-18 rounded-full" />
           <div class="flex flex-col gap-5 ">
             <div class="flex items-baseline gap-0.5 ">
-              <span class="text-xl font-bold text-black dark:text-gray-200 italic">Moyhuai</span>
-              <span class="text-sm text-gray-500 dark:text-gray-400 italic">| MyIndex</span>
+              <span class="text-lg font-bold text-black dark:text-gray-200 italic">Moyhuai</span>
+              <span class="text-xs text-gray-500 dark:text-gray-400 italic">| MyIndex</span>
             </div>
 
           </div>
