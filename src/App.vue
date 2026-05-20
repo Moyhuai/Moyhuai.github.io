@@ -116,15 +116,15 @@ onClickOutside(SettingsMenuRef, () => {
 
         <!-- 双列布局 -->
         <div :class="[
-          'grid gap-6 md:grid-cols-2 transform transition-all duration-700',
+          'transform transition-all duration-700',
           isLoaded ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'
         ]">
 
           <!-- 左侧列 -->
-          <div class="space-y-6">
+          <div class="float-left w-full md:w-[calc(50%-12px)] space-y-6">
             <!-- 头像卡片 -->
             <div
-              class="bg-linear-to-br from-sky-100/80 to-teal-100/80 dark:from-gray-800/80 dark:to-gray-700/80 backdrop-blur-md rounded-3xl p-8 shadow-lg">
+              class="bg-linear-to-br from-sky-100/80 to-teal-100/80 dark:from-gray-800/80 dark:to-gray-700/80 backdrop-blur-md rounded-2xl p-5 shadow-lg">
               <ProfileCard :is-loaded="isLoaded" />
             </div>
 
@@ -144,7 +144,7 @@ onClickOutside(SettingsMenuRef, () => {
           </div>
 
           <!-- 右侧列 -->
-          <div class="space-y-6">
+          <div class="float-right w-full md:w-[calc(50%-12px)] space-y-6">
             <!-- 时间卡片 -->
             <div
               class="bg-linear-to-br from-sky-200/80 to-teal-200/80 dark:from-gray-700/80 dark:to-gray-600/80 backdrop-blur-md rounded-2xl p-6 shadow-lg">
@@ -179,6 +179,9 @@ onClickOutside(SettingsMenuRef, () => {
               </button>
             </div>
           </div>
+
+          <!-- 清除浮动 -->
+          <div class="clear-both"></div>
         </div>
       </div>
     </main>

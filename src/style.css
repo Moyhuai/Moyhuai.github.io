@@ -2,8 +2,26 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+/* 定义 BagnardSans 英文字体 */
+@font-face {
+  font-family: 'BagnardSans';
+  src: url('/fonts/BagnardSans.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* 定义 仓耳 中文字体 */
+@font-face {
+  font-family: 'CangEr';
+  src: url('/fonts/仓耳渔阳字.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
-  font-family: -apple-system, BlinkMacSystemFont, 'HarmonyOS Sans SC', 'OPPO Sans', 'MiSans', 'Roboto', 'Noto Sans SC', sans-serif;
+  font-family: 'BagnardSans', 'CangEr';
   line-height: 1.5;
   font-weight: 400;
 

@@ -7,44 +7,79 @@ interface MusicTrack {
   artist: string
   url: string
   cover?: string
-  lyrics?: string[]
+  lyricsFile?: string  // 歌词文件路径（相对于public目录）
 }
 
-// 音乐文件列表 - 包含歌曲名称、歌手、URL、封面和歌词
+// 音乐文件列表 - 包含歌曲名称、歌手、URL、封面和歌词文件路径
 const musicFiles: MusicTrack[] = [
   {
     name: '再见',
     artist: '张震岳',
     url: new URL('/music/再见.mp3', import.meta.url).href,
     cover: '/favicon.svg',
-    lyrics: [
-    ]
+    lyricsFile: '/music/再见.lrc'
   },
   {
     name: '唯一',
     artist: '告五人',
     url: new URL('/music/唯一.mp3', import.meta.url).href,
     cover: '/favicon.svg',
-    lyrics: [
-    ]
+    lyricsFile: '/music/唯一.lrc'
   },
   {
     name: '小城夏天',
     artist: 'LBI利比',
     url: new URL('/music/小城夏天.mp3', import.meta.url).href,
     cover: '/favicon.svg',
-    lyrics: [
-    ]
+    lyricsFile: '/music/小城夏天.lrc'
   },
   {
     name: '泡沫',
     artist: 'G.E.M.邓紫棋',
     url: new URL('/music/泡沫.mp3', import.meta.url).href,
     cover: '/favicon.svg',
-    lyrics: [
-    ]
+    lyricsFile: '/music/泡沫.lrc'
   }
 ]
+
+/**
+ * 解析LRC格式的歌词文本
+ * @param lrcText LRC格式的歌词文本
+ * @returns 解析后的歌词数组
+ */
+const parseLyrics = (lrcText: string): string[] => {
+  const lines = lrcText.split('\n')
+  const lyrics: string[] = []
+  
+  for (const line of lines) {
+    // 匹配时间戳格式 [mm:ss.xx] 或 [mm:ss.xxx]
+    const match = line.match(/\[\d{2}:\d{2}\.\d{2,3}\](.*)/)
+    if (match && match[1].trim()) {
+      lyrics.push(match[1].trim())
+    }
+  }
+  
+  return lyrics
+}
+
+/**
+ * 从文件加载歌词
+ * @param lyricsFile 歌词文件路径
+ * @returns Promise<string[]> 解析后的歌词数组
+ */
+const loadLyricsFromFile = async (lyricsFile: string): Promise<string[]> => {
+  try {
+    const response = await fetch(lyricsFile)
+    if (!response.ok) {
+      throw new Error(`Failed to load lyrics: ${response.status}`)
+    }
+    const text = await response.text()
+    return parseLyrics(text)
+  } catch (error) {
+    console.error('加载歌词失败:', error)
+    return []
+  }
+}
 
 /**
  * 音乐播放管理 Composable
@@ -94,7 +129,7 @@ export function useMusic() {
   }
 
   // 加载指定索引的歌曲
-  const loadTrack = (index: number) => {
+  const loadTrack = async (index: number) => {
     if (!audioElement || index < 0 || index >= musicFiles.length) return
     
     currentTrackIndex = index
@@ -102,7 +137,14 @@ export function useMusic() {
     currentTrack.value = track.name
     currentArtist.value = track.artist
     currentCover.value = track.cover || '/favicon.svg'
-    currentLyrics.value = track.lyrics || []
+    
+    // 如果有歌词文件路径，异步加载歌词
+    if (track.lyricsFile) {
+      currentLyrics.value = await loadLyricsFromFile(track.lyricsFile)
+      console.log('已加载歌词:', currentLyrics.value.length, '行')
+    } else {
+      currentLyrics.value = []
+    }
     
     audioElement.src = track.url
     audioElement.load()
@@ -113,9 +155,9 @@ export function useMusic() {
   }
 
   // 播放下一首
-  const playNext = () => {
+  const playNext = async () => {
     const nextIndex = (currentTrackIndex + 1) % musicFiles.length
-    loadTrack(nextIndex)
+    await loadTrack(nextIndex)
     
     if (isPlaying.value && audioElement) {
       audioElement.play().catch(err => {
@@ -125,9 +167,9 @@ export function useMusic() {
   }
 
   // 播放上一首
-  const playPrev = () => {
+  const playPrev = async () => {
     const prevIndex = (currentTrackIndex - 1 + musicFiles.length) % musicFiles.length
-    loadTrack(prevIndex)
+    await loadTrack(prevIndex)
     
     if (isPlaying.value && audioElement) {
       audioElement.play().catch(err => {
