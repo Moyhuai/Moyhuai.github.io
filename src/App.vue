@@ -73,7 +73,7 @@ onClickOutside(SettingsMenuRef, () => {
 
     <!-- 顶部导航栏 -->
     <nav
-      class="relative z-10 bg-sky-100/80 dark:bg-gray-800/80 backdrop-blur-md px-6 py-2">
+      class="fixed top-0 left-0 right-0 z-50 bg-sky-100/95 dark:bg-gray-800/95 backdrop-blur-md px-6 py-2 md:relative">
       <div class="max-w-7xl mx-auto flex items-center justify-between">
         <!-- Logo 区域 -->
         <div class="flex items-center gap-2 ">
@@ -111,7 +111,7 @@ onClickOutside(SettingsMenuRef, () => {
       class="fixed top-20 right-6 z-50" />
 
     <!-- 主内容区 -->
-    <main class="relative z-10 px-4 py-12 md:py-16">
+    <main class="relative z-10 px-4 pt-24 pb-12 md:py-16">
       <div class="max-w-5xl mx-auto">
 
         <!-- 双列布局 -->
