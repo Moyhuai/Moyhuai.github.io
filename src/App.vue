@@ -44,10 +44,23 @@ const updateTime = () => {
   dateString.value = `${weekdays[now.getDay()]}, ${now.getDate()} ${months[now.getMonth()]}.`
 }
 
-// 随机获取一条语录
+// 随机获取一条语录（不与上一次重复）
 const refreshQuote = () => {
-  const randomIndex = Math.floor(Math.random() * quotes.length)
+  const lastIndex = parseInt(localStorage.getItem('lastQuoteIndex') || '-1')
+  let randomIndex
+  
+  // 如果只有一条语录，直接使用
+  if (quotes.length === 1) {
+    randomIndex = 0
+  } else {
+    // 循环直到生成不同的索引
+    do {
+      randomIndex = Math.floor(Math.random() * quotes.length)
+    } while (randomIndex === lastIndex)
+  }
+  
   currentQuote.value = quotes[randomIndex]
+  localStorage.setItem('lastQuoteIndex', randomIndex.toString())
 }
 
 onMounted(() => {
@@ -154,9 +167,7 @@ onClickOutside(SettingsMenuRef, () => {
           <div class="float-right w-full md:w-[calc(50%-12px)] space-y-6">
             <!-- 时间卡片 -->
             <div
-              class="max-w-md bg-linear-to-br from-sky-200/80 to-teal-200/80 dark:from-gray-700/80 dark:to-gray-600/80 backdrop-blur-md rounded-2xl p-6 shadow-lg group cursor-pointer"
-              @click="refreshQuote"
-              title="点击刷新语录">
+              class="max-w-md bg-linear-to-br from-sky-200/80 to-teal-200/80 dark:from-gray-700/80 dark:to-gray-600/80 backdrop-blur-md rounded-2xl p-6 shadow-lg">
               <div class="text-5xl font-bold text-gray-700 dark:text-gray-200 mb-3 font-mono">
                 {{ timeString }}
               </div>
