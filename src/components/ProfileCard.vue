@@ -13,7 +13,7 @@ defineProps<{
       <img
         src="/avatar.png"
         alt="Moyhuai"
-        class="relative w-44 h-44 md:w-52 md:h-52 rounded-full shadow-2xl object-cover transition-all duration-500 ease-in-out"
+        class="relative w-24 h-24 md:w-30 md:h-30 rounded-full shadow-2xl object-cover transition-all duration-500 ease-in-out"
         @error="(e: any) => e.target.src = '/avatar.png'"
       />
       </div>

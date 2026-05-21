@@ -154,7 +154,7 @@ onClickOutside(SettingsMenuRef, () => {
           <div class="float-right w-full md:w-[calc(50%-12px)] space-y-6">
             <!-- 时间卡片 -->
             <div
-              class="bg-linear-to-br from-sky-200/80 to-teal-200/80 dark:from-gray-700/80 dark:to-gray-600/80 backdrop-blur-md rounded-2xl p-6 shadow-lg group cursor-pointer"
+              class="max-w-md bg-linear-to-br from-sky-200/80 to-teal-200/80 dark:from-gray-700/80 dark:to-gray-600/80 backdrop-blur-md rounded-2xl p-6 shadow-lg group cursor-pointer"
               @click="refreshQuote"
               title="点击刷新语录">
               <div class="text-5xl font-bold text-gray-700 dark:text-gray-200 mb-3 font-mono">
