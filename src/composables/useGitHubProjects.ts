@@ -81,7 +81,7 @@ export function useGitHubProjects(username: string = 'moyhuai') {
 
       // 转换为 Project 格式
       projects.value = repos
-        .filter(repo => !repo.fork) // 过滤掉 fork 的仓库
+        .filter(repo => !repo.fork && repo.name !== 'Moyhuai.github.io') // 过滤掉 fork 的仓库和自己的网站仓库
         .map(repo => {
           // 格式化更新时间
           const timeAgo = formatDate(repo.updated_at)

@@ -11,11 +11,13 @@ import { useMusic } from './composables/useMusic'
 
 import { socialLinks } from './data/socialLinks'
 import { i18n } from './data/i18n'
+import { quotes } from './data/quotes'
 import { Menu, Sun } from 'lucide-vue-next'
 import { onClickOutside } from '@vueuse/core'
 
 const showSettings = ref(false)
 const isLoaded = ref(false)
+const currentQuote = ref('')
 
 // 使用 Composables
 const { isDarkMode, toggleDarkMode } = useDarkMode()
@@ -42,10 +44,19 @@ const updateTime = () => {
   dateString.value = `${weekdays[now.getDay()]}, ${now.getDate()} ${months[now.getMonth()]}.`
 }
 
+// 随机获取一条语录
+const refreshQuote = () => {
+  const randomIndex = Math.floor(Math.random() * quotes.length)
+  currentQuote.value = quotes[randomIndex]
+}
+
 onMounted(() => {
   // 更新时间
   updateTime()
   setInterval(updateTime, 1000)
+
+  // 初始化随机语录
+  refreshQuote()
 
   const loadEle = document.getElementById("loading-screen");
   if (loadEle) {
@@ -112,16 +123,15 @@ onClickOutside(SettingsMenuRef, () => {
 
     <!-- 主内容区 -->
     <main class="relative z-10 px-4 pt-24 pb-12 md:py-16">
-      <div class="max-w-5xl mx-auto">
-
-        <!-- 双列布局 -->
+      <div class="max-w-2xl mx-auto">
+      <!-- 双列布局 -->
         <div :class="[
           'transform transition-all duration-700',
           isLoaded ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'
         ]">
 
           <!-- 左侧列 -->
-          <div class="float-left w-full md:w-[calc(50%-12px)] space-y-6">
+          <div class="float-left w-full md:w-[calc(50%-10px)] space-y-6">
             <!-- 头像卡片 -->
             <div
               class="bg-linear-to-br from-sky-100/80 to-teal-100/80 dark:from-gray-800/80 dark:to-gray-700/80 backdrop-blur-md rounded-2xl p-5 shadow-lg">
@@ -129,13 +139,10 @@ onClickOutside(SettingsMenuRef, () => {
             </div>
 
             <!-- 名言卡片 -->
-            <div
-              class="bg-sky-50/80 dark:bg-gray-800/60 backdrop-blur-md rounded-2xl p-6 shadow-md">
+            <div class="bg-sky-50/80 dark:bg-gray-800/60 backdrop-blur-md rounded-2xl p-6 shadow-md border border-sky-100/50 dark:border-gray-700/50">
               <div class="flex items-start gap-3">
-                <span class="text-3xl text-teal-500 font-serif">"</span>
-                <p class="text-gray-700 dark:text-gray-300 italic flex-1">
-
-                </p>
+                <span class="text-5xltext-black dark:text-white font-serif">"知识不能替代友谊,比起失去你,我宁愿做个笨蛋</span>
+               
               </div>
             </div>
 
@@ -147,19 +154,21 @@ onClickOutside(SettingsMenuRef, () => {
           <div class="float-right w-full md:w-[calc(50%-12px)] space-y-6">
             <!-- 时间卡片 -->
             <div
-              class="bg-linear-to-br from-sky-200/80 to-teal-200/80 dark:from-gray-700/80 dark:to-gray-600/80 backdrop-blur-md rounded-2xl p-6 shadow-lg">
+              class="bg-linear-to-br from-sky-200/80 to-teal-200/80 dark:from-gray-700/80 dark:to-gray-600/80 backdrop-blur-md rounded-2xl p-6 shadow-lg group cursor-pointer"
+              @click="refreshQuote"
+              title="点击刷新语录">
               <div class="text-5xl font-bold text-gray-700 dark:text-gray-200 mb-3 font-mono">
                 {{ timeString }}
               </div>
               <div class="text-lg text-gray-600 dark:text-gray-400 italic">
                 {{ dateString }}
               </div>
-              <div class="mt-4 pt-4">
+              <div class="mt-4 pt-4 border-t border-sky-300/30 dark:border-gray-600/30">
                 <p class="text-sm text-gray-600 dark:text-gray-400">
-                  没对象怕什么,我有对象,我下棋也没赢过啊。
+                  {{ currentQuote }}
                 </p>
                 <p class="text-xs text-gray-500 dark:text-gray-500 mt-1 text-right">
-                  —— 《憨憨语录》
+                  —— 《精选语录》
                 </p>
               </div>
             </div>
