@@ -28,33 +28,6 @@ const emit = defineEmits<{
     <div
       class="w-56 bg-white dark:bg-gray-800 rounded-xl shadow-2xl border border-gray-200 dark:border-gray-700 overflow-hidden"
     >
-      <!-- 暗黑模式切换 -->
-      <!-- <button
-        @click="$emit('toggleDarkMode')"
-        class="w-full px-4 py-3 flex items-center justify-between hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200"
-      >
-        <div class="flex items-center gap-3">
-          <CheckIcon
-            v-if="isDarkMode"
-            :size="18"
-            class="text-green-500"
-          />
-          <XIcon
-            v-else
-            :size="18"
-            class="text-gray-400"
-          />
-          <span class="text-sm text-gray-700 dark:text-gray-300">
-            {{ isChinese ? '暗黑模式' : 'Dark Mode' }}
-          </span>
-        </div>
-        <MoonIcon
-          :size="20"
-          class="text-purple-500"
-        />
-      </button> -->
-
-     
       <!-- 语言切换 -->
       <button
         @click="$emit('toggleLanguage')"
