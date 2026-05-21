@@ -25,3 +25,11 @@ export const quotes = [
   "bug 是程序的灵魂，没有 bug 的程序是没有灵魂的。",
   "今天你 debug 了吗？",
 ]
+
+/**
+ * 随机获取一条语录
+ */
+export function getRandomQuote(): string {
+  const randomIndex = Math.floor(Math.random() * quotes.length)
+  return quotes[randomIndex]
+}
