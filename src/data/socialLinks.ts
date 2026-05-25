@@ -13,12 +13,12 @@ export const socialLinks: SocialLink[] = [
   },
   {
     name: 'WeChat',
-    url: '#wechat',
+    url: 'weixin://di/chat?hwc0116yt',
     color: 'hover:bg-green-500 hover:text-white'
   },
   {
     name: 'Bilibili',
-    url: 'https://space.bilibili.com/',
+    url: 'https://space.bilibili.com/2012642101',
     color: 'hover:bg-pink-500 hover:text-white'
   }
 ]
