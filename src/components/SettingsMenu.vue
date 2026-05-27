@@ -39,8 +39,8 @@ const emit = defineEmits<{
             class="text-green-500"
           />
           <span class="text-sm text-gray-700 dark:text-gray-300">
-            {{ isChinese ? '英文' : 'Chinese' }}
-          </span>
+              {{ isChinese ? 'English' : '中文' }}
+            </span>
         </div>
         <LanguagesIcon
           :size="20"

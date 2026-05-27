@@ -104,8 +104,8 @@ onClickOutside(SettingsMenuRef, () => {
           <img src="/avatar.png" alt="Logo" class="w-18 h-18 rounded-full" />
           <div class="flex flex-col gap-5 ">
             <div class="flex items-baseline gap-0.5 ">
-              <span class="text-lg font-bold text-black dark:text-gray-200 italic">Moyhuai</span>
-              <span class="text-xs text-gray-500 dark:text-gray-400 italic">| MyIndex</span>
+              <span class="text-lg font-bold text-gray-800 dark:text-gray-200 italic">Moyhuai</span>
+              <span class="text-[5px] text-gray-500 dark:text-gray-400 italic">| MyIndex</span>
             </div>
 
           </div>
@@ -154,7 +154,7 @@ onClickOutside(SettingsMenuRef, () => {
             <!-- 名言卡片 -->
             <div class="bg-sky-50/80 dark:bg-gray-800/60 backdrop-blur-md rounded-2xl p-6 shadow-md border border-sky-100/50 dark:border-gray-700/50">
               <div class="flex items-start gap-3">
-                <span class="text-5xltext-black dark:text-white font-serif">"知识不能替代友谊,比起失去你,我宁愿做个笨蛋</span>
+                <span class="text-xl text-gray-700 dark:text-gray-300 font-serif italic">"知识不能替代友谊，比起失去你，我宁愿做个笨蛋。</span>
                
               </div>
             </div>
@@ -168,17 +168,17 @@ onClickOutside(SettingsMenuRef, () => {
             <!-- 时间卡片 -->
             <div
               class="max-w-md bg-linear-to-br from-sky-200/80 to-teal-200/80 dark:from-gray-700/80 dark:to-gray-600/80 backdrop-blur-md rounded-2xl p-6 shadow-lg">
-              <div class="text-5xl font-bold text-gray-700 dark:text-gray-200 mb-3 font-mono">
+              <div class="text-4xl md:text-5xl font-bold text-gray-800 dark:text-gray-100 mb-3 font-mono">
                 {{ timeString }}
               </div>
-              <div class="text-lg text-gray-600 dark:text-gray-400 italic">
+              <div class="text-base text-gray-600 dark:text-gray-400 italic">
                 {{ dateString }}
               </div>
               <div class="mt-4 pt-4 border-t border-sky-300/30 dark:border-gray-600/30">
-                <p class="text-sm text-gray-600 dark:text-gray-400">
+                <p class="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
                   {{ currentQuote }}
                 </p>
-                <p class="text-xs text-gray-500 dark:text-gray-500 mt-1 text-right">
+                <p class="text-xs text-gray-500 dark:text-gray-500 mt-2 text-right">
                   —— 《精选语录》
                 </p>
               </div>
@@ -194,7 +194,7 @@ onClickOutside(SettingsMenuRef, () => {
                 class="px-6 py-3 bg-sky-100/80 dark:bg-gray-800/80 backdrop-blur-md rounded-full text-gray-700 dark:text-gray-300 hover:bg-sky-200/80 dark:hover:bg-gray-700/80 transition-all duration-300 hover:scale-105">
                 <span class="flex items-center justify-center gap-2">
                   <span>📦</span>
-                  <span>展示更多仓库</span>
+                  <span class="text-gray-700 dark:text-gray-300">展示更多仓库</span>
                 </span>
               </button>
             </div>

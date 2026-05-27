@@ -19,7 +19,7 @@ const displayProjects = props.projects || githubProjects
 <template>
   <!-- 项目展示 -->
   <div class="mb-10">
-    <h3 class="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-5 text-center">
+    <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-5 text-center">
       {{ title }}
     </h3>
 
@@ -48,9 +48,9 @@ const displayProjects = props.projects || githubProjects
         <div class="flex items-start justify-between mb-2">
           <div class="flex-1">
             <div class="flex items-center gap-2 mb-1">
-              <h4 class="font-semibold text-base text-gray-900 dark:text-white transition-colors duration-300 group-hover:text-blue-600 dark:group-hover:text-blue-400">
-                {{ project.title }}
-              </h4>
+              <h4 class="font-semibold text-sm text-gray-800 dark:text-gray-100 transition-colors duration-300 group-hover:text-blue-600 dark:group-hover:text-blue-400">
+              {{ project.title }}
+            </h4>
               <ExternalLink class="w-3.5 h-3.5 text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity" />
             </div>
             
@@ -72,7 +72,7 @@ const displayProjects = props.projects || githubProjects
           />
         </div>
         
-        <p class="text-xs text-gray-600 dark:text-gray-400 mb-3 line-clamp-2">
+        <p class="text-xs text-gray-600 dark:text-gray-400 mb-3 leading-relaxed line-clamp-2">
           {{ project.description }}
         </p>
         

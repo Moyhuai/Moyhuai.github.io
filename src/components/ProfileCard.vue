@@ -20,12 +20,12 @@ defineProps<{
 
     <!-- 姓名和标题 -->
     <div class="text-center space-y-3">
-      <h1 class="text-3xl md:text-4xl font-bold text-black dark:text-white transition-all duration-500 tracking-tight">
+      <h1 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white transition-all duration-500 tracking-tight">
         Moyhuai
       </h1>
-      <p class="text-sm text-gray-600 dark:text-gray-400">
-              嗨，欢迎来到我的个人网站！
-            </p>
+      <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">
+        嗨，欢迎来到我的个人网站！
+      </p>
     </div>
   </div>
 </template>
