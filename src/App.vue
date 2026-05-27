@@ -105,7 +105,7 @@ onClickOutside(SettingsMenuRef, () => {
           <div class="flex flex-col gap-5 ">
             <div class="flex items-baseline gap-0.5 ">
               <span class="text-lg font-bold text-gray-800 dark:text-gray-200 italic">Moyhuai</span>
-              <span class="text-[0.8rem] text-gray-500 dark:text-gray-400 italic">| MyIndex</span>
+              <span class="text-[0.6rem] text-gray-500 dark:text-gray-400 italic">| MyIndex</span>
             </div>
 
           </div>
