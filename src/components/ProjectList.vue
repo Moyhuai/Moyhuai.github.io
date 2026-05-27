@@ -49,8 +49,8 @@ const displayProjects = props.projects || githubProjects
           <div class="flex-1">
             <div class="flex items-center gap-2 mb-1">
               <h4 class="font-semibold text-sm text-gray-800 dark:text-gray-100 transition-colors duration-300 group-hover:text-blue-600 dark:group-hover:text-blue-400">
-              {{ project.title }}
-            </h4>
+                {{ project.title }}
+              </h4>
               <ExternalLink class="w-3.5 h-3.5 text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity" />
             </div>
             
@@ -81,7 +81,7 @@ const displayProjects = props.projects || githubProjects
           <span
             v-for="tech in project.tech"
             :key="tech"
-            class="px-2 py-0.5 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/30 dark:to-purple-900/30 text-gray-700 dark:text-gray-300 text-xs rounded-md"
+            class="px-2 py-0.5 bg-linear-to-r from-blue-50 to-purple-50 dark:from-blue-900/30 dark:to-purple-900/30 text-gray-700 dark:text-gray-300 text-xs rounded-md"
           >
             {{ tech }}
           </span>
