@@ -9,7 +9,9 @@ defineProps<{
 // 微信弹窗控制
 const showWeChatModal = ref(false)
 
-const openWeChatModal = () => {
+const openWeChatModal = (event: Event) => {
+  event.stopPropagation()
+  event.preventDefault()
   showWeChatModal.value = true
 }
 
@@ -20,7 +22,7 @@ const closeWeChatModal = () => {
 
 <template>
   <!-- 社交链接 -->
-  <div class="flex justify-center gap-3 mb-10 flex-wrap  h-screen w-full ">
+  <div class="flex justify-center gap-3 mb-10 flex-wrap  ">
     
     <a
       v-for="link in links"
@@ -28,8 +30,8 @@ const closeWeChatModal = () => {
       :href="link.url"
       :target="link.name === 'WeChat' ? undefined : '_blank'"
       :rel="link.name === 'WeChat' ? undefined : 'noopener noreferrer'"
-      @click.prevent="link.name === 'WeChat' ? openWeChatModal() : undefined"
-      class="group relative flex items-center justify-center w-14 h-14 bg-white dark:bg-gray-800 rounded-xl shadow-md hover:shadow-xl transition-all duration-300 hover:scale-110 hover:-translate-y-1 overflow-hidden cursor-pointer"
+      @click="link.name === 'WeChat' && openWeChatModal($event)"
+      class="group relative flex items-center justify-center w-14 h-14 bg-white dark:bg-gray-800 rounded-xl shadow-md hover:shadow-xl transition-all duration-300 hover:scale-110 hover:-translate-y-1 overflow-hidden "
     >
       <!-- 悬停背景 -->
       <div 
