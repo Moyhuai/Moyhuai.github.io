@@ -1,5 +1,4 @@
 @import "tailwindcss";
-
 @custom-variant dark (&:where(.dark, .dark *));
 
 /* 定义 BagnardSans 英文字体 */

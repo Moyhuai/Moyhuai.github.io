@@ -23,6 +23,9 @@ export interface I18nConfig {
   copyright: string
   madeWith: string
   andCoffee: string
+  settings: string
+  personalizeExperience: string
+  closeSidebar: string
   projects: Project[]
 }
 

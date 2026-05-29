@@ -121,18 +121,72 @@ onClickOutside(SettingsMenuRef, () => {
           </button>
           <button @click="toggleSettings"
             class="p-2 rounded-full hover:bg-white/50 dark:hover:bg-gray-700/50 transition-all duration-300"
-            title="打开设置菜单">
+            title="打开侧边栏">
             <Menu class="w-6 h-6 text-teal-600 dark:text-teal-400" />
           </button>
         </div>
       </div>
     </nav>
 
-    <!-- 设置菜单 (悬浮显示) -->
-    <SettingsMenu @blur="showSettings = false" ref="SettingsMenuRef" v-if="showSettings" :is-dark-mode="isDarkMode"
-      :is-music-playing="isMusicPlaying" :current-track="currentTrack" :is-chinese="isChinese"
-      @toggle-dark-mode="toggleDarkMode" @toggle-music="toggleMusic" @toggle-language="toggleLanguage"
-      class="fixed top-20 right-6 z-50" />
+    <!-- 侧边栏遮罩层 -->
+    <transition
+      enter-active-class="transition-opacity duration-300"
+      enter-from-class="opacity-0"
+      enter-to-class="opacity-100"
+      leave-active-class="transition-opacity duration-200"
+      leave-from-class="opacity-100"
+      leave-to-class="opacity-0"
+    >
+      <div
+        v-if="showSettings"
+        class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50"
+        @click="showSettings = false"
+      ></div>
+    </transition>
+
+    <!-- 侧边栏菜单 -->
+    <transition
+      enter-active-class="transition-transform duration-300 ease-out"
+      enter-from-class="translate-x-full"
+      enter-to-class="translate-x-0"
+      leave-active-class="transition-transform duration-200 ease-in"
+      leave-from-class="translate-x-0"
+      leave-to-class="translate-x-full"
+    >
+      <div
+        v-if="showSettings"
+        class="fixed top-0 right-0 h-full w-88 bg-white dark:bg-gray-800 shadow-2xl z-50 flex flex-col"
+      >
+        <!-- 侧边栏头部 -->
+        <div class="p-6 border-b border-gray-200 dark:border-gray-700">
+          <h2 class="text-xl font-bold text-gray-800 dark:text-gray-200">{{ i18n[isChinese ? 'zh' : 'en'].settings }}</h2>
+          <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">{{ i18n[isChinese ? 'zh' : 'en'].personalizeExperience }}</p>
+        </div>
+
+        <!-- 侧边栏内容 -->
+        <div class="flex-1 overflow-y-auto p-4">
+          <SettingsMenu
+            :is-dark-mode="isDarkMode"
+            :is-music-playing="isMusicPlaying"
+            :current-track="currentTrack"
+            :is-chinese="isChinese"
+            @toggle-dark-mode="toggleDarkMode"
+            @toggle-music="toggleMusic"
+            @toggle-language="toggleLanguage"
+          />
+        </div>
+
+        <!-- 侧边栏底部 -->
+        <div class="p-4 border-t border-gray-200 dark:border-gray-700">
+          <button
+            @click="showSettings = false"
+            class="w-full px-4 py-2 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-lg text-gray-700 dark:text-gray-300 transition-colors duration-200"
+          >
+            {{ i18n[isChinese ? 'zh' : 'en'].closeSidebar }}
+          </button>
+        </div>
+      </div>
+    </transition>
 
     <!-- 主内容区 -->
     <main class="relative z-10 px-4 pt-24 pb-12 md:py-16">

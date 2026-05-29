@@ -6,6 +6,9 @@ export const i18n: Record<'zh' | 'en', I18nConfig> = {
     copyright: '© 2026 Moyhuai. 使用 💜 基于 Vue 3 + Tailwind CSS 构建',
     madeWith: '用心制作',
     andCoffee: '和大量 ☕',
+    settings: '设置',
+    personalizeExperience: '个性化您的体验',
+    closeSidebar: '关闭侧边栏',
     projects: [
       {
         title: '项目 1',
@@ -32,6 +35,9 @@ export const i18n: Record<'zh' | 'en', I18nConfig> = {
     copyright: '© 2026 Moyhuai. Built with 💜 using Vue 3 + Tailwind CSS',
     madeWith: 'Made with',
     andCoffee: 'and lots of ☕',
+    settings: 'Settings',
+    personalizeExperience: 'Personalize your experience',
+    closeSidebar: 'Close Sidebar',
     projects: [
       {
         title: 'Project 1',
