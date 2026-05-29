@@ -107,12 +107,16 @@ onMounted(() => {
 
 const toggleSettings = () => {
   showSettings.value = !showSettings.value
+  // 打开侧边栏时禁止页面滚动，关闭时恢复滚动
+  document.body.style.overflow = showSettings.value ? 'hidden' : ''
 }
 
 const SettingsMenuRef = ref();
 
 onClickOutside(SettingsMenuRef, () => {
   showSettings.value = false;
+  // 关闭侧边栏时恢复页面滚动
+  document.body.style.overflow = '';
 });
 
 </script>
