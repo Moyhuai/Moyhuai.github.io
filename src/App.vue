@@ -155,7 +155,7 @@ onClickOutside(SettingsMenuRef, () => {
     >
       <div
         v-if="showSettings"
-        class="fixed top-0 right-0 h-full w-full lg:w-[600px] bg-white dark:bg-gray-800 shadow-2xl z-50 flex flex-col">
+        class="fixed top-0 right-0 h-full w-full sm:w-[400px] md:w-[500px] lg:w-[550px] xl:w-[600px] bg-white dark:bg-gray-800 shadow-2xl z-50 flex flex-col">
        <!-- 侧边栏头部 -->
         <div class="p-6 border-b border-gray-200 dark:border-gray-700 text-center">
           <h2 class="text-xl font-bold text-gray-800 dark:text-gray-200">{{ i18n[isChinese ? 'zh' : 'en'].settings }}</h2>
@@ -266,40 +266,6 @@ onClickOutside(SettingsMenuRef, () => {
 /* 平滑滚动 */
 html {
   scroll-behavior: smooth;
-}
-
-/* 自定义滚动条 */
-::-webkit-scrollbar {
-  width: 12px;
-}
-
-::-webkit-scrollbar-track {
-  background: #f1f1f1;
-}
-
-.dark ::-webkit-scrollbar-track {
-  background: #1f2937;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #d1d5db;
-  border-radius: 6px;
-  border: 2px solid transparent;
-  background-clip: padding-box;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #9ca3af;
-  border: 2px solid transparent;
-  background-clip: padding-box;
-}
-
-.dark ::-webkit-scrollbar-thumb {
-  background: #4b5563;
-}
-
-.dark ::-webkit-scrollbar-thumb:hover {
-  background: #6b7280;
 }
 
 /* 隐藏滚动条 */
