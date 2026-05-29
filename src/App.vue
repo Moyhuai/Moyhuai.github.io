@@ -155,7 +155,7 @@ onClickOutside(SettingsMenuRef, () => {
     >
       <div
         v-if="showSettings"
-        class="fixed top-0 right-0 h-full w-96 lg:w-[600px] bg-white dark:bg-gray-800 shadow-2xl z-50 flex flex-col">
+        class="fixed top-0 right-0 h-full w-full lg:w-[600px] bg-white dark:bg-gray-800 shadow-2xl z-50 flex flex-col">
        <!-- 侧边栏头部 -->
         <div class="p-6 border-b border-gray-200 dark:border-gray-700 text-center">
           <h2 class="text-xl font-bold text-gray-800 dark:text-gray-200">{{ i18n[isChinese ? 'zh' : 'en'].settings }}</h2>
