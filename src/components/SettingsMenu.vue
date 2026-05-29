@@ -5,6 +5,7 @@ const props = defineProps<{
   isDarkMode: boolean
   isMusicPlaying: boolean
   currentTrack?: string
+  currentArtist?: string
   isChinese: boolean
 }>()
 
@@ -60,9 +61,11 @@ const emit = defineEmits<{
         </span>
       </div>
       <CheckIcon
+        v-if="!isChinese"
         :size="16"
         class="text-green-500"
       />
+    
     </button>
 
     <!-- 音乐控制 -->
@@ -82,11 +85,12 @@ const emit = defineEmits<{
           class="text-gray-400"
         />
         <div class="flex flex-col items-start">
-          <span class="text-sm text-gray-700 dark:text-gray-300">
-            {{ isChinese ? (isMusicPlaying ? '音乐播放中' : '音乐') : (isMusicPlaying ? 'Music Playing' : 'Music') }}
+          <span class="text-sm font-medium text-gray-700 dark:text-gray-300">
+            {{ currentTrack || (isChinese ? '未选择歌曲' : 'No song selected') }}
+            
           </span>
-          <span v-if="currentTrack && isMusicPlaying" class="text-xs text-blue-500 mt-0.5">
-            {{ currentTrack }}
+          <span v-if="currentArtist" class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+            {{ currentArtist }}
           </span>
         </div>
       </div>

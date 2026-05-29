@@ -155,16 +155,15 @@ onClickOutside(SettingsMenuRef, () => {
     >
       <div
         v-if="showSettings"
-        class="fixed top-0 right-0 h-full w-88 bg-white dark:bg-gray-800 shadow-2xl z-50 flex flex-col"
-      >
-        <!-- 侧边栏头部 -->
-        <div class="p-6 border-b border-gray-200 dark:border-gray-700">
+        class="fixed top-0 right-0 h-full w-96 lg:w-[600px] bg-white dark:bg-gray-800 shadow-2xl z-50 flex flex-col">
+       <!-- 侧边栏头部 -->
+        <div class="p-6 border-b border-gray-200 dark:border-gray-700 text-center">
           <h2 class="text-xl font-bold text-gray-800 dark:text-gray-200">{{ i18n[isChinese ? 'zh' : 'en'].settings }}</h2>
           <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">{{ i18n[isChinese ? 'zh' : 'en'].personalizeExperience }}</p>
         </div>
 
         <!-- 侧边栏内容 -->
-        <div class="flex-1 overflow-y-auto p-4">
+        <div class="flex-1 overflow-y-auto p-4 scrollbar-hide">
           <SettingsMenu
             :is-dark-mode="isDarkMode"
             :is-music-playing="isMusicPlaying"
@@ -180,7 +179,8 @@ onClickOutside(SettingsMenuRef, () => {
         <div class="p-4 border-t border-gray-200 dark:border-gray-700">
           <button
             @click="showSettings = false"
-            class="w-full px-4 py-2 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-lg text-gray-700 dark:text-gray-300 transition-colors duration-200"
+            class="w-full px-4 py-2 bg-green-100 dark:bg-green-800 hover:bg-green-200 dark:hover:bg-green-700 rounded-lg text-black dark:text-black transition-colors duration-200"
+          
           >
             {{ i18n[isChinese ? 'zh' : 'en'].closeSidebar }}
           </button>
@@ -282,16 +282,34 @@ html {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(to bottom, #667eea, #764ba2);
+  background: #d1d5db;
   border-radius: 6px;
   border: 2px solid transparent;
   background-clip: padding-box;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(to bottom, #5568d3, #65408b);
+  background: #9ca3af;
   border: 2px solid transparent;
   background-clip: padding-box;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: #4b5563;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #6b7280;
+}
+
+/* 隐藏滚动条 */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
 }
 
 /* 选择文本样式 */
