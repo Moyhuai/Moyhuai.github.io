@@ -19,6 +19,33 @@ const showSettings = ref(false)
 const isLoaded = ref(false)
 const currentQuote = ref('')
 
+// 响应式控制页面滚动
+const isMobile = ref(false)
+
+const checkMobile = () => {
+  isMobile.value = window.innerWidth < 768 // md 断点
+}
+
+onMounted(() => {
+  // 更新时间
+  updateTime()
+  setInterval(updateTime, 1000)
+
+  // 初始化随机语录
+  refreshQuote()
+
+  const loadEle = document.getElementById("loading-screen");
+  if (loadEle) {
+    loadEle.classList.add("hide");
+    isLoaded.value = true;
+  }
+
+  // 初始化检查
+  checkMobile()
+  // 监听窗口大小变化
+  window.addEventListener('resize', checkMobile)
+})
+
 // 使用 Composables
 const { isDarkMode, toggleDarkMode } = useDarkMode()
 const { isChinese, toggleLanguage } = useLanguage()
@@ -92,7 +119,8 @@ onClickOutside(SettingsMenuRef, () => {
 
 <template>
   <div
-    class="theme-transition min-h-screen bg-linear-to-br from-sky-50 via-white to-teal-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+    class="theme-transition min-h-screen bg-linear-to-br from-sky-50 via-white to-teal-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900"
+    :style="{ overflowY: isMobile ? 'auto' : 'hidden' }">
     <BackgroundBlobs />
 
     <!-- 顶部导航栏 -->
