@@ -108,23 +108,15 @@ onMounted(() => {
 const toggleSettings = () => {
   showSettings.value = !showSettings.value
   // 打开侧边栏时禁止页面滚动，关闭时恢复滚动
-  document.body.style.overflow = showSettings.value ? 'hidden' : ''
+  document.body.style.overflow = showSettings.value ? 'auto' : ''
 }
 
-const SettingsMenuRef = ref();
-
-onClickOutside(SettingsMenuRef, () => {
-  showSettings.value = false;
-  // 关闭侧边栏时恢复页面滚动
-  document.body.style.overflow = '';
-});
 
 </script>
 
 <template>
   <div
-    class="theme-transition min-h-screen bg-linear-to-br from-sky-50 via-white to-teal-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900"
-    :style="{ overflowY: isMobile ? 'auto' : 'hidden' }">
+    class="theme-transition min-h-screen bg-linear-to-br from-sky-50 via-white to-teal-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 overflow-y-auto">
     <BackgroundBlobs />
 
     <!-- 顶部导航栏 -->
