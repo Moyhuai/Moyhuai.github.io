@@ -116,7 +116,7 @@ const toggleSettings = () => {
 
 <template>
   <div
-    class="theme-transition min-h-screen bg-linear-to-br from-sky-50 via-white to-teal-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 overflow-y-auto">
+    class="theme-transition min-h-screen bg-linear-to-br from-sky-50 via-white to-teal-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 overflow-y-auto ">
     <BackgroundBlobs />
 
     <!-- 顶部导航栏 -->
@@ -144,9 +144,9 @@ const toggleSettings = () => {
             <Sun v-else class="w-5 h-5 text-gray-600 dark:text-gray-300" />
           </button>
           <button @click="toggleSettings"
-            class="p-2 rounded-full hover:bg-white/50 dark:hover:bg-gray-700/50 transition-all duration-300"
+            class="p-2 rounded-full hover:bg-white/50 dark:hover:bg-gray-700/50 transition-all duration-300 "
             title="打开侧边栏">
-            <Menu class="w-6 h-6 text-teal-600 dark:text-teal-400" />
+            <Menu class="w-6 h-6 text-teal-600 dark:text-teal-400 " />
           </button>
         </div>
       </div>
