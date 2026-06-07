@@ -76,6 +76,22 @@ function toggleShuffle() {
 <template>
   <!-- 设置菜单 -->
   <div class="space-y-2">
+    <!-- 主题切换 -->
+    <div class="sidebar-footer-row">
+      <label class="theme-toggle" for="theme-checkbox">
+        <input type="checkbox" id="theme-checkbox" :checked="isDarkMode" @change="$emit('toggleDarkMode')" />
+        <span class="slider">
+          <span class="knob-container">
+            <span class="sun">☀</span>
+            <span class="moon">☾</span>
+          </span>
+        </span>
+      </label>
+      <span class="text-sm text-gray-700 dark:text-gray-300 ml-3">
+        {{ isChinese ? (isDarkMode ? '浅色模式' : '深色模式') : (isDarkMode ? 'Light Mode' : 'Dark Mode') }}
+      </span>
+    </div>
+
     <!-- 语言切换 -->
     <button
       @click="$emit('toggleLanguage')"
