@@ -11,33 +11,34 @@ interface MusicTrack {
 }
 
 // 音乐文件列表 - 包含歌曲名称、歌手、URL、封面和歌词文件路径
+// 封面图片通过 download_covers.py 脚本从网易云音乐API获取
 const musicFiles: MusicTrack[] = [
   {
     name: '再见',
     artist: '张震岳',
     url: new URL('/music/再见.mp3', import.meta.url).href,
-    cover: '/favicon.svg',
+    cover: 'https://p1.music.126.net/9YuflxGL7XFAfOnINEsdWw==/109951171358446171.jpg',
     lyricsFile: '/music/再见.lrc'
   },
   {
     name: '唯一',
     artist: '告五人',
     url: new URL('/music/唯一.mp3', import.meta.url).href,
-    cover: '/favicon.svg',
+    cover: 'https://p2.music.126.net/C6Vro2l0BH59Wka9gOaC6w==/109951171180358170.jpg',
     lyricsFile: '/music/唯一.lrc'
   },
   {
     name: '小城夏天',
     artist: 'LBI利比',
     url: new URL('/music/小城夏天.mp3', import.meta.url).href,
-    cover: '/favicon.svg',
+    cover: 'https://p1.music.126.net/Ac3LYebUIET9ghN0OZpIPw==/109951167849266151.jpg',
     lyricsFile: '/music/小城夏天.lrc'
   },
   {
     name: '泡沫',
     artist: 'G.E.M.邓紫棋',
     url: new URL('/music/泡沫.mp3', import.meta.url).href,
-    cover: '/favicon.svg',
+    cover: 'https://p2.music.126.net/0Rm9y81tpJlFFGjjPfkP3A==/2437617278839346.jpg',
     lyricsFile: '/music/泡沫.lrc'
   }
 ]

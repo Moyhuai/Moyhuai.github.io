@@ -12,7 +12,7 @@ import { useMusic } from './composables/useMusic'
 import { socialLinks } from './data/socialLinks'
 import { i18n } from './data/i18n'
 import { quotes } from './data/quotes'
-import { Menu, Sun } from 'lucide-vue-next'
+import { Menu } from 'lucide-vue-next'
 
 
 const showSettings = ref(false)
@@ -49,7 +49,7 @@ onMounted(() => {
 // 使用 Composables
 const { isDarkMode, toggleDarkMode } = useDarkMode()
 const { isChinese, toggleLanguage } = useLanguage()
-const { isPlaying: isMusicPlaying, currentTrack, toggleMusic } = useMusic()
+const { isPlaying: isMusicPlaying, currentTrack, currentArtist, currentCover, toggleMusic, playNext, playPrev } = useMusic()
 
 
 // 获取当前时间
@@ -137,12 +137,15 @@ const toggleSettings = () => {
 
         <!-- 右侧操作按钮 -->
         <div class="flex items-center gap-3">
-          <button @click="toggleDarkMode"
-            class="p-2 rounded-full hover:bg-white/50 dark:hover:bg-gray-700/50 transition-all duration-300"
-            title="切换主题">
-            <Sun v-if="isDarkMode" class="w-5 h-5 text-gray-600 dark:text-gray-300" />
-            <Sun v-else class="w-5 h-5 text-gray-600 dark:text-gray-300" />
-          </button>
+          <label class="theme-toggle" for="theme-checkbox-nav">
+            <input type="checkbox" id="theme-checkbox-nav" :checked="isDarkMode" @change="toggleDarkMode" />
+            <span class="slider">
+              <span class="knob-container">
+                <span class="sun">☀</span>
+                <span class="moon">☾</span>
+              </span>
+            </span>
+          </label>
           <button @click="toggleSettings"
             class="p-2 rounded-full hover:bg-white/50 dark:hover:bg-gray-700/50 transition-all duration-300 "
             title="打开侧边栏">
@@ -192,10 +195,14 @@ const toggleSettings = () => {
             :is-dark-mode="isDarkMode"
             :is-music-playing="isMusicPlaying"
             :current-track="currentTrack"
+            :current-artist="currentArtist"
+            :current-cover="currentCover"
             :is-chinese="isChinese"
             @toggle-dark-mode="toggleDarkMode"
             @toggle-music="toggleMusic"
             @toggle-language="toggleLanguage"
+            @play-next="playNext"
+            @play-prev="playPrev"
           />
         </div>
 
