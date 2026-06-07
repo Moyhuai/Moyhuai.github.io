@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from 'vue'
-import {  PauseIcon, PlayIcon, Github, Mail, Heart, SkipBack, SkipForward, Shuffle, Volume1 } from 'lucide-vue-next'
+import {  PauseIcon, PlayIcon, Github, Mail, Heart, SkipBack, SkipForward, Shuffle, Repeat, Repeat1, Volume1 } from 'lucide-vue-next'
+import type { PlayMode } from '../composables/useMusic'
 
 const props = defineProps<{
   isDarkMode: boolean
@@ -9,12 +10,14 @@ const props = defineProps<{
   currentArtist?: string
   currentCover?: string
   isChinese: boolean
+  playMode?: PlayMode
 }>()
 
 const emit = defineEmits<{
   toggleDarkMode: []
   toggleMusic: []
   toggleLanguage: []
+  togglePlayMode: []
   playNext: []
   playPrev: []
 }>()
@@ -24,7 +27,12 @@ const progress = ref(0)
 const duration = ref(100)
 const currentTime = ref(0)
 const audioElement = ref<HTMLAudioElement | null>(null)
-const isShuffle = ref(false)
+const playModeLabel = computed(() => {
+  const mode = props.playMode || 'sequential'
+  if (mode === 'sequential') return props.isChinese ? '顺序播放' : 'Sequential'
+  if (mode === 'single') return props.isChinese ? '单曲循环' : 'Repeat One'
+  return props.isChinese ? '随机播放' : 'Shuffle'
+})
 
 const formattedCurrentTime = computed(() => formatTime(currentTime.value))
 const formattedDuration = computed(() => formatTime(duration.value))
@@ -68,9 +76,7 @@ function seekTo(event: MouseEvent) {
   }
 }
 
-function toggleShuffle() {
-  isShuffle.value = !isShuffle.value
-}
+
 </script>
 
 <template>
@@ -144,10 +150,12 @@ function toggleShuffle() {
         <div class="controls flex items-center justify-center gap-5">
           <div 
             class="control order p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors cursor-pointer"
-            :title="isChinese ? '随机播放' : 'Shuffle'"
-            @click="toggleShuffle"
+            :title="playModeLabel"
+            @click="$emit('togglePlayMode')"
           >
-            <Shuffle :size="20" :class="isShuffle ? 'text-[var(--theme)]' : 'text-gray-500 dark:text-gray-400'" />
+            <Repeat v-if="(playMode || 'sequential') === 'sequential'" :size="20" class="text-gray-500" /> 
+            <Repeat1 v-else-if="playMode === 'single'" :size="20" class="text-gray-500" />
+            <Shuffle v-else :size="20" class=" text-gray-500" />
           </div>
           <div 
             class="control prev p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors cursor-pointer"

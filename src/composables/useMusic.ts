@@ -93,12 +93,17 @@ const loadLyricsFromFile = async (lyricsFile: string): Promise<string[]> => {
  * @returns playNext - 播放下一首
  * @returns playPrev - 播放上一首
  */
+export type PlayMode = 'sequential' | 'single' | 'shuffle'
+
 export function useMusic() {
   const isPlaying = ref(false)
   const currentTrack = ref('')
   const currentArtist = ref('')
   const currentCover = ref('')
   const currentLyrics = ref<string[]>([])
+  const playMode = ref<PlayMode>('sequential')
+  const volume = ref(1)
+  const isMuted = ref(false)
   let audioElement: HTMLAudioElement | null = null
   let currentTrackIndex = 0
 
@@ -115,16 +120,29 @@ export function useMusic() {
       console.log('音频加载成功，可以播放:', currentTrack.value)
     })
     
-    // 监听播放结束，自动播放下一首
+    // 监听播放结束，根据播放模式处理
     audioElement.addEventListener('ended', () => {
-      console.log('当前歌曲播放完毕，切换到下一首')
-      playNext()
+      console.log('当前歌曲播放完毕')
+      if (playMode.value === 'single') {
+        audioElement!.currentTime = 0
+        audioElement!.play().catch(err => console.error('单曲循环播放失败:', err))
+      } else {
+        playNext()
+      }
     })
     
+    audioElement.addEventListener('volumechange', () => {
+      if (audioElement) {
+        volume.value = audioElement.volume
+        isMuted.value = audioElement.muted
+        localStorage.setItem('musicVolume', audioElement.volume.toString())
+        localStorage.setItem('musicMuted', audioElement.muted.toString())
+      }
+    })
+
     // 监听播放错误
     audioElement.addEventListener('error', (e) => {
       console.error('音频播放错误:', e)
-      // 尝试播放下一首
       playNext()
     })
   }
@@ -157,12 +175,27 @@ export function useMusic() {
 
   // 播放下一首
   const playNext = async () => {
-    const nextIndex = (currentTrackIndex + 1) % musicFiles.length
+    let nextIndex: number
+    if (playMode.value === 'shuffle') {
+      if (musicFiles.length <= 1) {
+        nextIndex = 0
+      } else {
+        do {
+          nextIndex = Math.floor(Math.random() * musicFiles.length)
+        } while (nextIndex === currentTrackIndex)
+      }
+    } else {
+      nextIndex = (currentTrackIndex + 1) % musicFiles.length
+    }
     await loadTrack(nextIndex)
-    
-    if (isPlaying.value && audioElement) {
+
+    if (audioElement) {
+      isPlaying.value = true
+      localStorage.setItem('musicPlaying', 'true')
       audioElement.play().catch(err => {
         console.error('自动播放失败:', err)
+        isPlaying.value = false
+        localStorage.setItem('musicPlaying', 'false')
       })
     }
   }
@@ -171,10 +204,14 @@ export function useMusic() {
   const playPrev = async () => {
     const prevIndex = (currentTrackIndex - 1 + musicFiles.length) % musicFiles.length
     await loadTrack(prevIndex)
-    
-    if (isPlaying.value && audioElement) {
+
+    if (audioElement) {
+      isPlaying.value = true
+      localStorage.setItem('musicPlaying', 'true')
       audioElement.play().catch(err => {
         console.error('自动播放失败:', err)
+        isPlaying.value = false
+        localStorage.setItem('musicPlaying', 'false')
       })
     }
   }
@@ -241,18 +278,67 @@ export function useMusic() {
     })
   }
 
+  const toggleMute = () => {
+    if (!audioElement) return
+    audioElement.muted = !audioElement.muted
+    isMuted.value = audioElement.muted
+    localStorage.setItem('musicMuted', audioElement.muted.toString())
+  }
+
+  const setVolume = (v: number) => {
+    if (!audioElement) return
+    const clamped = Math.max(0, Math.min(1, v))
+    audioElement.volume = clamped
+    volume.value = clamped
+    if (clamped > 0 && audioElement.muted) {
+      audioElement.muted = false
+      isMuted.value = false
+    }
+    localStorage.setItem('musicVolume', clamped.toString())
+    localStorage.setItem('musicMuted', audioElement.muted.toString())
+  }
+
+  // 切换播放模式：顺序 → 单曲 → 随机 → 顺序
+  const togglePlayMode = () => {
+    const modes: PlayMode[] = ['sequential', 'single', 'shuffle']
+    const currentIndex = modes.indexOf(playMode.value)
+    playMode.value = modes[(currentIndex + 1) % modes.length]
+    localStorage.setItem('playMode', playMode.value)
+    console.log('播放模式:', playMode.value)
+  }
+
   // 初始化音乐状态
   onMounted(() => {
-    // 从 localStorage 恢复音乐状态
     const savedMusic = localStorage.getItem('musicPlaying')
     if (savedMusic !== null) {
       isPlaying.value = savedMusic === 'true'
     }
-    
-    // 初始化音频元素
+
+    const savedPlayMode = localStorage.getItem('playMode') as PlayMode | null
+    if (savedPlayMode && ['sequential', 'single', 'shuffle'].includes(savedPlayMode)) {
+      playMode.value = savedPlayMode
+    }
+
+    const savedVolume = localStorage.getItem('musicVolume')
+    if (savedVolume !== null) {
+      const v = parseFloat(savedVolume)
+      if (!isNaN(v) && v >= 0 && v <= 1) {
+        volume.value = v
+      }
+    }
+
+    const savedMuted = localStorage.getItem('musicMuted')
+    if (savedMuted !== null) {
+      isMuted.value = savedMuted === 'true'
+    }
+
     initAudio()
-    
-    // 初始化 Media Session API
+
+    if (audioElement) {
+      audioElement.volume = volume.value
+      audioElement.muted = isMuted.value
+    }
+
     initMediaSession()
   })
 
@@ -298,7 +384,13 @@ export function useMusic() {
     currentArtist,
     currentCover,
     currentLyrics,
+    playMode,
+    volume,
+    isMuted,
     toggleMusic,
+    togglePlayMode,
+    toggleMute,
+    setVolume,
     playNext,
     playPrev
   }

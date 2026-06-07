@@ -49,7 +49,7 @@ onMounted(() => {
 // 使用 Composables
 const { isDarkMode, toggleDarkMode } = useDarkMode()
 const { isChinese, toggleLanguage } = useLanguage()
-const { isPlaying: isMusicPlaying, currentTrack, currentArtist, currentCover, toggleMusic, playNext, playPrev } = useMusic()
+const { isPlaying: isMusicPlaying, currentTrack, currentArtist, currentCover, toggleMusic, playNext, playPrev, playMode, togglePlayMode } = useMusic()
 
 
 // 获取当前时间
@@ -189,9 +189,11 @@ const toggleSettings = () => {
             :current-artist="currentArtist"
             :current-cover="currentCover"
             :is-chinese="isChinese"
+            :play-mode="playMode"
             @toggle-dark-mode="toggleDarkMode"
             @toggle-music="toggleMusic"
             @toggle-language="toggleLanguage"
+            @toggle-play-mode="togglePlayMode"
             @play-next="playNext"
             @play-prev="playPrev"
           />
