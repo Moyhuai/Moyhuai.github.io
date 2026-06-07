@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from 'vue'
-import { LanguagesIcon, CheckIcon, PauseIcon, PlayIcon, Github, Mail, Heart, SkipBack, SkipForward, Shuffle, Volume1 } from 'lucide-vue-next'
+import {  PauseIcon, PlayIcon, Github, Mail, Heart, SkipBack, SkipForward, Shuffle, Volume1 } from 'lucide-vue-next'
 
 const props = defineProps<{
   isDarkMode: boolean
@@ -76,9 +76,9 @@ function toggleShuffle() {
 <template>
   <!-- 设置菜单 -->
   <div class="space-y-2">
-    <!-- 主题切换 -->
-    <div class="sidebar-footer-row">
-      <label class="theme-toggle" for="theme-checkbox">
+    <!-- 主题 & 语言切换 -->
+    <div class="sidebar-footer-row" style="display: flex; gap: 12px; justify-content: center;">
+      <label class="theme-toggle hidden md:inline-flex" for="theme-checkbox">
         <input type="checkbox" id="theme-checkbox" :checked="isDarkMode" @change="$emit('toggleDarkMode')" />
         <span class="slider">
           <span class="knob-container">
@@ -87,30 +87,16 @@ function toggleShuffle() {
           </span>
         </span>
       </label>
-     
-    </div>
-
-    <!-- 语言切换 -->
-    <button
-      @click="$emit('toggleLanguage')"
-      class="w-full px-4 py-3 flex items-center justify-between hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200 rounded-lg"
-    >
-      <div class="flex items-center gap-3">
-        <LanguagesIcon
-          :size="18"
-          class="text-orange-500"
-        />
-        <span class="text-sm text-gray-700 dark:text-gray-300">
-          {{ isChinese ? 'English' : '中文' }}
+      <label class="theme-toggle lang-toggle" for="lang-checkbox">
+        <input type="checkbox" id="lang-checkbox" :checked="!isChinese" @change="$emit('toggleLanguage')" />
+        <span class="slider">
+          <span class="knob-container">
+            <span class="zh">中</span>
+            <span class="en">EN</span>
+          </span>
         </span>
-      </div>
-      <CheckIcon
-        v-if="!isChinese"
-        :size="16"
-        class="text-green-500"
-      />
-    
-    </button>
+      </label>
+    </div>
 
     <!-- 音乐播放器 -->
     <div class="player cursor-pointer" style="--theme: #fddedc;">
