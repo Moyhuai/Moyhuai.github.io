@@ -76,9 +76,13 @@ function toggleShuffle() {
 <template>
   <!-- 设置菜单 -->
   <div class="space-y-2">
-    <!-- 主题 & 语言切换 -->
-    <div class="sidebar-footer-row" style="display: flex; gap: 12px; justify-content: center;">
-      <label class="theme-toggle hidden md:inline-flex" for="theme-checkbox">
+    <!-- 主题切换 -->
+    <div class="sidebar-footer-row">
+      <div class="flex items-center gap-3">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-amber-500"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></svg>
+        <span class="text-sm text-gray-700 dark:text-gray-300">{{ isChinese ? '深色模式' : 'Dark Mode' }}</span>
+      </div>
+      <label class="theme-toggle" for="theme-checkbox">
         <input type="checkbox" id="theme-checkbox" :checked="isDarkMode" @change="$emit('toggleDarkMode')" />
         <span class="slider">
           <span class="knob-container">
@@ -87,6 +91,14 @@ function toggleShuffle() {
           </span>
         </span>
       </label>
+    </div>
+
+    <!-- 语言切换 -->
+    <div class="sidebar-footer-row">
+      <div class="flex items-center gap-3">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-orange-500"><path d="m5 8 6 6"></path><path d="m4 14 6-6 2-3"></path><path d="M2 5h12"></path><path d="M7 2h1"></path><path d="m22 22-5-10-5 10"></path><path d="M14 18h6"></path></svg>
+        <span class="text-sm text-gray-700 dark:text-gray-300">{{ isChinese ? 'English' : '中文' }}</span>
+      </div>
       <label class="theme-toggle lang-toggle" for="lang-checkbox">
         <input type="checkbox" id="lang-checkbox" :checked="!isChinese" @change="$emit('toggleLanguage')" />
         <span class="slider">
@@ -125,23 +137,7 @@ function toggleShuffle() {
           <div class="cur-lyric text-xs text-gray-400 dark:text-gray-500 mt-1">
             作曲 : {{ currentArtist || (isChinese ? '未知' : 'Unknown') }}
           </div>
-          <div class="progress-container flex items-center gap-3 mt-3">
-            <div class="cur-time text-xs text-gray-400 dark:text-gray-500">
-              {{ formattedCurrentTime }}
-            </div>
-            <div 
-              class="progress-bar flex-1 h-1 bg-gray-200 dark:bg-gray-600 rounded-full cursor-pointer overflow-hidden"
-              @click="seekTo"
-            >
-              <div 
-                class="progress h-full bg-[var(--theme)] rounded-full transition-all duration-100"
-                :style="{ width: `${progress}%` }"
-              ></div>
-            </div>
-            <div class="total-time text-xs text-gray-400 dark:text-gray-500">
-              {{ formattedDuration }}
-            </div>
-          </div>
+
         </div>
       </div>
       <div class="bottom mt-4">

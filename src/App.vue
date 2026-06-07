@@ -137,15 +137,6 @@ const toggleSettings = () => {
 
         <!-- 右侧操作按钮 -->
         <div class="flex items-center gap-3">
-          <label class="theme-toggle" for="theme-checkbox-nav">
-            <input type="checkbox" id="theme-checkbox-nav" :checked="isDarkMode" @change="toggleDarkMode" />
-            <span class="slider">
-              <span class="knob-container">
-                <span class="sun">☀</span>
-                <span class="moon">☾</span>
-              </span>
-            </span>
-          </label>
           <button @click="toggleSettings"
             class="p-2 rounded-full hover:bg-white/50 dark:hover:bg-gray-700/50 transition-all duration-300 "
             title="打开侧边栏">
