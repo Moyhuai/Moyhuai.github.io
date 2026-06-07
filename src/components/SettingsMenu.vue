@@ -87,9 +87,7 @@ function toggleShuffle() {
           </span>
         </span>
       </label>
-      <span class="text-sm text-gray-700 dark:text-gray-300 ml-3">
-        {{ isChinese ? (isDarkMode ? '浅色模式' : '深色模式') : (isDarkMode ? 'Light Mode' : 'Dark Mode') }}
-      </span>
+     
     </div>
 
     <!-- 语言切换 -->
