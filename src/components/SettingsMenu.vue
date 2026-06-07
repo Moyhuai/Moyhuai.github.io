@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from 'vue'
-import {  PauseIcon, PlayIcon, Github, Mail, Heart, SkipBack, SkipForward, Shuffle, Repeat, Repeat1, Volume1 } from 'lucide-vue-next'
+import {  PauseIcon, PlayIcon, Github, Mail, Heart, SkipBack, SkipForward, Shuffle, Repeat, Repeat1, Volume1, Volume2, VolumeX } from 'lucide-vue-next'
 import type { PlayMode } from '../composables/useMusic'
 
 const props = defineProps<{
@@ -11,6 +11,8 @@ const props = defineProps<{
   currentCover?: string
   isChinese: boolean
   playMode?: PlayMode
+  volume?: number
+  isMuted?: boolean
 }>()
 
 const emit = defineEmits<{
@@ -20,6 +22,7 @@ const emit = defineEmits<{
   togglePlayMode: []
   playNext: []
   playPrev: []
+  toggleMute: []
 }>()
 
 // 进度条相关
@@ -32,6 +35,14 @@ const playModeLabel = computed(() => {
   if (mode === 'sequential') return props.isChinese ? '顺序播放' : 'Sequential'
   if (mode === 'single') return props.isChinese ? '单曲循环' : 'Repeat One'
   return props.isChinese ? '随机播放' : 'Shuffle'
+})
+
+const volumePercent = computed(() => Math.round((props.volume ?? 1) * 100))
+
+const volumeIcon = computed(() => {
+  if (props.isMuted || (props.volume ?? 1) === 0) return VolumeX
+  if ((props.volume ?? 1) < 0.5) return Volume1
+  return Volume2
 })
 
 const formattedCurrentTime = computed(() => formatTime(currentTime.value))
@@ -179,11 +190,12 @@ function seekTo(event: MouseEvent) {
           >
             <SkipForward :size="20" class="text-gray-500 dark:text-gray-400" />
           </div>
-          <div 
+          <div
             class="control volume p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors cursor-pointer"
-            title="60%"
+            :title="isMuted ? (isChinese ? '已静音' : 'Muted') : `${volumePercent}%`"
+            @click="$emit('toggleMute')"
           >
-            <Volume1 :size="20" class="text-gray-500 dark:text-gray-400" />
+            <component :is="volumeIcon" :size="20" class="text-gray-500 dark:text-gray-400" />
           </div>
         </div>
       </div>
