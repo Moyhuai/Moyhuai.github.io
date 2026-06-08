@@ -5,6 +5,7 @@ import SocialLinks from './components/SocialLinks.vue'
 import ProjectList from './components/ProjectList.vue'
 import SettingsMenu from './components/SettingsMenu.vue'
 import BackgroundBlobs from './components/BackgroundBlobs.vue'
+import DesktopPet from './components/DesktopPet.vue'
 import { useDarkMode } from './composables/useDarkMode'
 import { useLanguage } from './composables/useLanguage'
 import { useMusic } from './composables/useMusic'
@@ -206,7 +207,7 @@ const toggleSettings = () => {
         <div class="p-4 border-t border-gray-200 dark:border-gray-700">
           <button
             @click="showSettings = false"
-            class="w-full px-4 py-2 bg-green-100 dark:bg-green-800 hover:bg-green-200 dark:hover:bg-green-700 rounded-lg text-black dark:text-black transition-colors duration-200"
+            class="w-full px-4 py-2 bg-green-100 dark:bg-green-800 hover:bg-green-200 dark:hover:bg-green-700 rounded-lg text-black dark:text-white transition-colors duration-200"
           
           >
             {{ i18n[isChinese ? 'zh' : 'en'].closeSidebar }}
@@ -286,6 +287,9 @@ const toggleSettings = () => {
         </div>
       </div>
     </main>
+
+    <!-- 桌面宠物 -->
+    <DesktopPet :sidebar-open="showSettings" />
   </div>
 </template>
 

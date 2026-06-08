@@ -337,6 +337,15 @@ export function useMusic() {
     if (audioElement) {
       audioElement.volume = volume.value
       audioElement.muted = isMuted.value
+      
+      // 如果之前是播放状态，刷新后自动恢复播放
+      if (isPlaying.value) {
+        audioElement.play().catch(err => {
+          console.error('刷新后自动播放失败:', err)
+          isPlaying.value = false
+          localStorage.setItem('musicPlaying', 'false')
+        })
+      }
     }
 
     initMediaSession()
