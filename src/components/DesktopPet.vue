@@ -157,9 +157,7 @@ const {
   bathInventory,
   foodItems,
   bathItems,
-  emotionLevel,
-  staminaLevel,
-  cleanlinessLevel,
+ 
   feedPet,
   bathPet,
   petPet,
@@ -217,7 +215,6 @@ const handleFeedPet = (foodId: string) => {
 const handleBathPet = (bathId: string) => {
   const success = bathPet(bathId)
   if (success) {
-    const bath = bathItems.find(b => b.id === bathId)
     showTipMessage(`给小黑洗澡！`)
   } else {
     showTipMessage('没有洗澡用品了！')
