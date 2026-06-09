@@ -25,18 +25,18 @@ export interface BathItem {
 const MAX_VALUE = 100
 const MIN_VALUE = 0
 
-// 自动播放的动画列表
-const autoPlayAnimations = [
-  '/ixiaohei/shake-head-txt.gif',
-  '/ixiaohei/playing guitar.gif',
-  '/ixiaohei/play heixiu.gif',
-  '/ixiaohei/licking the claw.gif',
-  '/ixiaohei/eat-watermelon-txt.gif',
-  '/ixiaohei/eat drumstick.gif',
-  '/ixiaohei/bye.gif'
-]
-
 export function useDesktopPet() {
+  // 自动播放的动画列表
+  const autoPlayAnimations = [
+    '/ixiaohei/shake-head-txt.gif',
+    '/ixiaohei/playing guitar.gif',
+    '/ixiaohei/play heixiu.gif',
+    '/ixiaohei/licking the claw.gif',
+    '/ixiaohei/eat-watermelon-txt.gif',
+    '/ixiaohei/eat drumstick.gif',
+    '/ixiaohei/bye.gif'
+  ]
+
   // 宠物状态
   const petState = ref<PetState>({
     emotion: 60,
@@ -51,13 +51,13 @@ export function useDesktopPet() {
 
   // 食物库存
   const foodInventory = ref<Record<string, number>>({
-    'FOOD_001': 10, // 鸡蛋
-    'FOOD_002': 10  // 牛奶
+    'FOOD_001': 10,
+    'FOOD_002': 10
   })
 
   // 洗澡用品库存
   const bathInventory = ref<Record<string, number>>({
-    'BATH_001': 10  // 肥皂
+    'BATH_001': 10
   })
 
   // 物品定义
@@ -126,14 +126,24 @@ export function useDesktopPet() {
     petState.value.cleanliness = Math.max(MIN_VALUE, Math.min(MAX_VALUE, petState.value.cleanliness + delta))
   }
 
+  const performAction = (actionImage: string, duration: number) => {
+    if (isPerformingAction.value) return
+
+    isPerformingAction.value = true
+    currentActionImage.value = actionImage
+
+    setTimeout(() => {
+      currentActionImage.value = ''
+      isPerformingAction.value = false
+    }, duration)
+  }
+
   const feedPet = (foodId: string) => {
     const food = foodItems.find(f => f.id === foodId)
     if (!food || foodInventory.value[foodId] <= 0) return false
 
-    // 执行进食动画
     performAction(food.actionImage, 2000)
 
-    // 更新状态
     updateStamina(food.buff)
     updateEmotion(5)
     foodInventory.value[foodId]--
@@ -145,27 +155,13 @@ export function useDesktopPet() {
     const bath = bathItems.find(b => b.id === bathId)
     if (!bath || bathInventory.value[bathId] <= 0) return false
 
-    // 执行洗澡动画
     performAction(bath.actionImage, 2000)
 
-    // 更新状态
     updateCleanliness(bath.buff)
     updateEmotion(5)
     bathInventory.value[bathId]--
 
     return true
-  }
-
-  const performAction = (actionImage: string, duration: number) => {
-    if (isPerformingAction.value) return
-
-    isPerformingAction.value = true
-    currentActionImage.value = actionImage
-
-    setTimeout(() => {
-      currentActionImage.value = ''
-      isPerformingAction.value = false
-    }, duration)
   }
 
   const petPet = () => {
@@ -183,27 +179,58 @@ export function useDesktopPet() {
     updateStamina(-5)
   }
 
-  // 自动播放动画
   const playRandomAnimation = () => {
     if (isPerformingAction.value) return
 
-    const randomIndex = Math.floor(Math.random() * autoPlayAnimations.length)
-    const randomAnimation = autoPlayAnimations[randomIndex]
+    // 从本地存储获取已播放的动画列表
+    let playedAnimations: string[] = []
+    try {
+      const stored = localStorage.getItem('playedAnimations')
+      if (stored) {
+        playedAnimations = JSON.parse(stored)
+        // 验证数据格式
+        if (!Array.isArray(playedAnimations)) {
+          playedAnimations = []
+        }
+      }
+    } catch (e) {
+      playedAnimations = []
+    }
+    
+    // 过滤出未播放过的动画
+    const unplayedAnimations = autoPlayAnimations.filter(anim => !playedAnimations.includes(anim))
+    
+    let randomAnimation: string
+    
+    if (unplayedAnimations.length > 0) {
+      // 如果有未播放的动画，随机选择一个
+      const randomIndex = Math.floor(Math.random() * unplayedAnimations.length)
+      randomAnimation = unplayedAnimations[randomIndex]
+      
+      // 记录到本地存储
+      const newPlayedAnimations = [...playedAnimations, randomAnimation]
+      localStorage.setItem('playedAnimations', JSON.stringify(newPlayedAnimations))
+    } else {
+      // 如果所有动画都播放过了，重置并随机选择一个
+      localStorage.removeItem('playedAnimations')
+      const randomIndex = Math.floor(Math.random() * autoPlayAnimations.length)
+      randomAnimation = autoPlayAnimations[randomIndex]
+      localStorage.setItem('playedAnimations', JSON.stringify([randomAnimation]))
+    }
+    
     performAction(randomAnimation, 2000)
   }
 
-  // 随时间自然衰减
   const startDecay = () => {
     setInterval(() => {
       updateEmotion(-1)
       updateStamina(-1)
       updateCleanliness(-0.5)
-    }, 30000) // 每30秒衰减一次
+    }, 30000)
 
-    // 自动播放动画（每3秒随机播放一次）
     setInterval(() => {
       playRandomAnimation()
-    }, 3000) // 每3秒自动播放一次动画
+    }, 3000)
   }
 
   return {
