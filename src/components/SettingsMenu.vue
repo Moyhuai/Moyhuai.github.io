@@ -271,7 +271,7 @@ function seekTo(event: MouseEvent) {
       <p class="text-xs text-gray-600 dark:text-gray-400 leading-relaxed">
         <span class="flex items-center gap-1 justify-center">
           <Heart :size="14" class="text-red-500" />
-          <span>{{ isChinese ? '用心制作' : 'Made with love' }}</span>
+          <span>{{ isChinese ? 'Moyhuai用心制作' : 'Moyhuai Made with love' }}</span>
         </span>
       </p>
     </div>
