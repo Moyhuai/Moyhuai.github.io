@@ -129,74 +129,91 @@ function seekTo(event: MouseEvent) {
 
     <!-- 音乐播放器 -->
     <div class="player cursor-pointer" style="--theme: var(--color-player-theme);">
-      <div class="top flex gap-4">
-        <div class="cover-container relative">
-          <div class="vinyl-disc hidden"></div>
-          <img 
-            crossorigin="anonymous" 
-            :src="currentCover" 
-            :alt="currentTrack || 'Album cover'" 
-            class="w-20 h-20 rounded-lg shadow-lg static-mode object-cover"
+      <!-- 封面和歌曲信息 -->
+      <div class="flex justify-center items-center mb-4">
+        <div class="cover-container relative w-32 h-32">
+          <div
+            class="vinyl-disc"
+            :class="{ 'rotating': isMusicPlaying, 'hidden': !isMusicPlaying }"
+          ></div>
+          <img
+            crossorigin="anonymous"
+            :src="currentCover"
+            :alt="currentTrack || 'Album cover'"
+            class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 shadow-lg object-cover transition-all duration-500 z-10"
+            :class="isMusicPlaying ? 'w-18 h-18 rounded-full rotating' : 'w-32 h-32 rounded-lg'"
             @error="(e) => (e.target as HTMLImageElement).src = '/avatar.png'"
           />
-          <div class="cover-center hidden"></div>
-          
         </div>
-        <div class="info-container flex-1 min-w-0">
+        <div class="info-container flex-1 min-w-0 ml-2 max-w-48">
           <div class="name-artist">
-            <div class="name text-base font-semibold text-gray-800 dark:text-gray-200 truncate">
+            <div class="name text-lg font-semibold text-gray-800 dark:text-gray-200 truncate text-center max-h-7">
               {{ currentTrack || (isChinese ? '未选择歌曲' : 'No song selected') }}
             </div>
-            <div class="artist text-sm text-gray-500 dark:text-gray-400">
+            <div class="artist text-base text-gray-500 dark:text-gray-400 text-center truncate max-h-6">
               {{ currentArtist || (isChinese ? '未知歌手' : 'Unknown Artist') }}
             </div>
           </div>
-          <div class="cur-lyric text-xs text-gray-400 dark:text-gray-500 mt-1">
+          <div class="cur-lyric text-sm text-gray-400 dark:text-gray-500 mt-1 text-center truncate max-h-5">
             作曲 : {{ currentArtist || (isChinese ? '未知' : 'Unknown') }}
           </div>
-
         </div>
       </div>
-      <div class="bottom mt-4">
-        <div class="controls flex items-center justify-center gap-5">
-          <div 
-            class="control order p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors cursor-pointer"
-            :title="playModeLabel"
-            @click="$emit('togglePlayMode')"
-          >
-            <Repeat v-if="(playMode || 'sequential') === 'sequential'" :size="20" class="text-gray-500" /> 
-            <Repeat1 v-else-if="playMode === 'single'" :size="20" class="text-gray-500" />
-            <Shuffle v-else :size="20" class=" text-gray-500" />
-          </div>
-          <div 
-            class="control prev p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors cursor-pointer"
-            :title="isChinese ? '上一首' : 'Previous'"
-            @click="$emit('playPrev')"
-          >
-            <SkipBack :size="20" class="text-gray-500 dark:text-gray-400" />
-          </div>
-          <div 
-            class="control play w-12 h-12 rounded-full bg-[var(--theme)] flex items-center justify-center cursor-pointer hover:opacity-90 transition-opacity shadow-md"
-            :title="isChinese ? (isMusicPlaying ? '暂停' : '播放') : (isMusicPlaying ? 'Pause' : 'Play')"
-            @click="$emit('toggleMusic')"
-          >
-            <PauseIcon v-if="isMusicPlaying" :size="24" class="text-white" />
-            <PlayIcon v-else :size="24" class="text-white" />
-          </div>
-          <div 
-            class="control next p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors cursor-pointer"
-            :title="isChinese ? '下一首' : 'Next'"
-            @click="$emit('playNext')"
-          >
-            <SkipForward :size="20" class="text-gray-500 dark:text-gray-400" />
-          </div>
+      <!-- 进度条 -->
+      <div class="progress-bar-container mx-2 mb-4 flex justify-center">
+        <div class="flex items-center gap-2">
+          <span class="text-xs text-gray-500 dark:text-gray-400 w-10">{{ formattedCurrentTime }}</span>
           <div
-            class="control volume p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors cursor-pointer"
-            :title="isMuted ? (isChinese ? '已静音' : 'Muted') : `${volumePercent}%`"
-            @click="$emit('toggleMute')"
+            class="progress-bar w-80 h-2 bg-gray-200 dark:bg-gray-700 rounded-full cursor-pointer overflow-hidden"
+            @click="seekTo"
           >
-            <component :is="volumeIcon" :size="20" class="text-gray-500 dark:text-gray-400" />
+            <div
+              class="progress h-full bg-[var(--theme)] rounded-full transition-all duration-100"
+              :style="{ width: `${progress}%` }"
+            ></div>
           </div>
+          <span class="text-xs text-gray-500 dark:text-gray-400 w-10">{{ formattedDuration }}</span>
+        </div>
+      </div>
+      <!-- 控制按钮 -->
+      <div class="controls flex items-center justify-center gap-5">
+        <div
+          class="control order p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors cursor-pointer"
+          :title="playModeLabel"
+          @click="$emit('togglePlayMode')"
+        >
+          <Repeat v-if="(playMode || 'sequential') === 'sequential'" :size="20" class="text-gray-500" />
+          <Repeat1 v-else-if="playMode === 'single'" :size="20" class="text-gray-500" />
+          <Shuffle v-else :size="20" class=" text-gray-500" />
+        </div>
+        <div
+          class="control prev p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors cursor-pointer"
+          :title="isChinese ? '上一首' : 'Previous'"
+          @click="$emit('playPrev')"
+        >
+          <SkipBack :size="20" class="text-gray-500 dark:text-gray-400" />
+        </div>
+        <div
+          class="control play w-14 h-14 rounded-full bg-[var(--theme)] flex items-center justify-center cursor-pointer hover:opacity-90 transition-opacity shadow-md"
+          :title="isChinese ? (isMusicPlaying ? '暂停' : '播放') : (isMusicPlaying ? 'Pause' : 'Play')"
+          @click="$emit('toggleMusic')"
+        >
+          <PauseIcon v-if="isMusicPlaying" :size="28" class="text-white" />
+          <PlayIcon v-else :size="28" class="text-white" />
+        </div>
+        <div
+          class="control next p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors cursor-pointer"
+          :title="isChinese ? '下一首' : 'Next'"
+          @click="$emit('playNext')"
+        >
+          <SkipForward :size="20" class="text-gray-500 dark:text-gray-400" />
+        </div>
+        <div
+          class="control volume p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors cursor-pointer"
+          :title="isMuted ? (isChinese ? '已静音' : 'Muted') : `${volumePercent}%`"
+          @click="$emit('toggleMute')"
+        >
+          <component :is="volumeIcon" :size="20" class="text-gray-500 dark:text-gray-400" />
         </div>
       </div>
     </div>
