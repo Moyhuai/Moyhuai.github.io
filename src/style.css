@@ -19,14 +19,119 @@
   font-display: swap;
 }
 
+/* ========== CSS 变量系统 ========== */
+
+:root {
+  /* 主色调 - 亮色模式 */
+  --color-primary: #38bdf8;          /* sky-400 */
+  --color-primary-hover: #0ea5e9;    /* sky-500 */
+  --color-secondary: #14b8a6;        /* teal-500 */
+  --color-secondary-hover: #0d9488;  /* teal-600 */
+
+  /* 强调色 */
+  --color-accent-purple: #a78bfa;   /* purple-400 */
+  --color-accent-blue: #60a5fa;     /* blue-400 */
+  --color-accent-pink: #f472b6;     /* pink-400 */
+  --color-accent-green: #4ade80;    /* green-400 */
+  --color-accent-orange: #fb923c;   /* orange-400 */
+  --color-accent-red: #f87171;      /* red-400 */
+
+  /* 中性色 - 亮色模式 */
+  --color-text-primary: #111827;     /* gray-900 */
+  --color-text-secondary: #1f2937;   /* gray-800 */
+  --color-text-tertiary: #374151;    /* gray-700 */
+  --color-text-muted: #4b5563;       /* gray-600 */
+  --color-text-subtle: #6b7280;      /* gray-500 */
+  --color-text-light: #9ca3af;       /* gray-400 */
+  --color-text-lighter: #d1d5db;     /* gray-300 */
+  --color-text-disabled: #e5e7eb;    /* gray-200 */
+
+  /* 背景色 - 亮色模式 */
+  --color-bg-primary: #ffffff;
+  --color-bg-secondary: #f9fafb;     /* gray-50 */
+  --color-bg-tertiary: #f3f4f6;      /* gray-100 */
+  --color-bg-hover: #e5e7eb;         /* gray-200 */
+  --color-bg-card: rgba(255, 255, 255, 0.8);
+  --color-bg-overlay: rgba(0, 0, 0, 0.5);
+
+  /* 边框色 - 亮色模式 */
+  --color-border-primary: #e5e7eb;   /* gray-200 */
+  --color-border-secondary: #d1d5db; /* gray-300 */
+  --color-border-subtle: #f3f4f6;    /* gray-100 */
+
+  /* 功能色 */
+  --color-success: #22c55e;         /* green-500 */
+  --color-warning: #f59e0b;         /* amber-500 */
+  --color-error: #ef4444;           /* red-500 */
+  --color-info: #3b82f6;            /* blue-500 */
+
+  /* 阴影 */
+  --color-shadow: rgba(0, 0, 0, 0.1);
+  --color-shadow-lg: rgba(0, 0, 0, 0.15);
+
+  /* 渐变起始色 */
+  --color-gradient-start: #38bdf8;  /* sky-400 */
+  --color-gradient-end: #14b8a6;    /* teal-500 */
+
+  /* 音乐播放器主题色 */
+  --color-player-theme: #fddedc;
+
+  /* 毛玻璃效果 */
+  --color-glass-bg: rgba(255, 255, 255, 0.8);
+  --color-glass-border: rgba(255, 255, 255, 0.3);
+}
+
+/* 暗黑模式变量 */
+.dark {
+  --color-primary: #7dd3fc;          /* sky-300 */
+  --color-primary-hover: #38bdf8;    /* sky-400 */
+  --color-secondary: #2dd4bf;        /* teal-400 */
+  --color-secondary-hover: #14b8a6; /* teal-500 */
+
+  /* 中性色 - 暗色模式 */
+  --color-text-primary: #ffffff;
+  --color-text-secondary: #f3f4f6;   /* gray-100 */
+  --color-text-tertiary: #e5e7eb;    /* gray-200 */
+  --color-text-muted: #d1d5db;       /* gray-300 */
+  --color-text-subtle: #9ca3af;      /* gray-400 */
+  --color-text-light: #6b7280;       /* gray-500 */
+  --color-text-lighter: #4b5563;     /* gray-600 */
+  --color-text-disabled: #374151;    /* gray-700 */
+
+  /* 背景色 - 暗色模式 */
+  --color-bg-primary: #111827;       /* gray-900 */
+  --color-bg-secondary: #1f2937;     /* gray-800 */
+  --color-bg-tertiary: #374151;      /* gray-700 */
+  --color-bg-hover: #4b5563;         /* gray-600 */
+  --color-bg-card: rgba(31, 41, 55, 0.8);
+  --color-bg-overlay: rgba(0, 0, 0, 0.7);
+
+  /* 边框色 - 暗色模式 */
+  --color-border-primary: #374151;   /* gray-700 */
+  --color-border-secondary: #4b5563; /* gray-600 */
+  --color-border-subtle: #1f2937;    /* gray-800 */
+
+  /* 阴影 */
+  --color-shadow: rgba(0, 0, 0, 0.3);
+  --color-shadow-lg: rgba(0, 0, 0, 0.5);
+
+  /* 渐变起始色 */
+  --color-gradient-start: #1e3a5f;  /* 深蓝 */
+  --color-gradient-end: #1f2937;     /* gray-800 */
+
+  /* 毛玻璃效果 */
+  --color-glass-bg: rgba(31, 41, 55, 0.8);
+  --color-glass-border: rgba(255, 255, 255, 0.1);
+}
+
 :root {
   font-family: 'BagnardSans', 'CangEr';
   line-height: 1.5;
   font-weight: 400;
 
   color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  color: var(--color-text-primary);
+  background-color: var(--color-bg-primary);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -39,12 +144,12 @@
 
 a {
   font-weight: 500;
-  color: #646cff;
+  color: var(--color-accent-purple);
   text-decoration: inherit;
   transition: color 0.3s ease;
 }
 a:hover {
-  color: #535bf2;
+  color: var(--color-primary);
 }
 
 html, body {
@@ -59,16 +164,6 @@ html, body {
   width: 100%;
   height: 100%;
   margin: 0 auto;
-}
-
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
 }
 
 /* 平滑过渡 - 移除全局通配符，只针对特定属性 */
@@ -170,10 +265,10 @@ html, body {
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(135deg, #87CEEB, #E0F6FF);
+  background: linear-gradient(135deg, var(--color-primary), var(--color-bg-secondary));
   border-radius: 28px;
   transition: all 0.4s ease;
-  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: inset 0 2px 4px var(--color-shadow);
 }
 
 .theme-toggle .knob-container {
@@ -182,13 +277,13 @@ html, body {
   left: 3px;
   width: 22px;
   height: 22px;
-  background: white;
+  background: var(--color-bg-primary);
   border-radius: 50%;
   transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 8px var(--color-shadow);
 }
 
 .theme-toggle .sun,
@@ -201,19 +296,19 @@ html, body {
 .theme-toggle .sun {
   opacity: 1;
   transform: rotate(0deg);
-  color: #FFA500;
+  color: var(--color-accent-orange);
 }
 
 .theme-toggle .moon {
   opacity: 0;
   transform: rotate(-90deg);
-  color: #6B7280;
+  color: var(--color-text-light);
 }
 
 /* 暗黑模式状态 */
 .theme-toggle input:checked + .slider {
-  background: linear-gradient(135deg, #1a1a2e, #16213e);
-  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+  background: linear-gradient(135deg, var(--color-bg-tertiary), var(--color-bg-secondary));
+  box-shadow: inset 0 2px 4px var(--color-shadow);
 }
 
 .theme-toggle input:checked + .slider .knob-container {
@@ -293,4 +388,9 @@ html, body {
 
 .dark .sidebar-footer-row:hover {
   background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* ========== 自定义鼠标样式 ========== */
+* {
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='10' fill='rgba(200,200,200,0.6)' stroke='rgba(150,150,150,0.8)' stroke-width='1'/%3E%3Ccircle cx='12' cy='12' r='4' fill='rgba(100,100,100,0.7)'/%3E%3C/svg%3E") 12 12, auto;
 }

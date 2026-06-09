@@ -128,7 +128,7 @@ function seekTo(event: MouseEvent) {
     </div>
 
     <!-- 音乐播放器 -->
-    <div class="player cursor-pointer" style="--theme: #fddedc;">
+    <div class="player cursor-pointer" style="--theme: var(--color-player-theme);">
       <div class="top flex gap-4">
         <div class="cover-container relative">
           <div class="vinyl-disc hidden"></div>

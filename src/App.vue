@@ -311,13 +311,13 @@ html {
 
 /* 选择文本样式 */
 ::selection {
-  background: rgba(102, 126, 234, 0.3);
+  background: color-mix(in srgb, var(--color-accent-purple) 30%, transparent);
   color: inherit;
 }
 
 /* 焦点可见性优化 */
 *:focus-visible {
-  outline: 2px solid #667eea;
+  outline: 2px solid var(--color-accent-purple);
   outline-offset: 2px;
 }
 </style>
