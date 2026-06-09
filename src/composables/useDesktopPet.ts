@@ -200,10 +200,10 @@ export function useDesktopPet() {
       updateCleanliness(-0.5)
     }, 30000) // 每30秒衰减一次
 
-    // 自动播放动画（每10秒随机播放一次）
+    // 自动播放动画（每3秒随机播放一次）
     setInterval(() => {
       playRandomAnimation()
-    }, 10000) // 每10秒自动播放一次动画
+    }, 3000) // 每3秒自动播放一次动画
   }
 
   return {

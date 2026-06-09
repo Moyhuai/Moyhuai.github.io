@@ -5,30 +5,26 @@
       class="pet-character"
       :class="{
         'performing-action': isPerformingAction,
-        [`emotion-${emotionLevel}`]: true
+        'is-clicked': isClicked
       }"
       @click="handlePetPet"
       @dblclick="playWithPet"
     >
       <!-- 当前动作图片 -->
-      <transition name="fade">
-        <img
-          v-if="currentActionImage"
-          :src="currentActionImage"
-          alt="Pet Action"
-          class="pet-action-image"
-        />
-      </transition>
+      <img
+        v-if="currentActionImage"
+        :src="currentActionImage"
+        alt="Pet Action"
+        class="pet-action-image"
+      />
 
       <!-- 默认宠物图片 -->
-      <transition name="fade">
-        <img
-          v-if="!currentActionImage"
-          :src="currentImage"
-          alt="XiaoHei"
-          class="pet-image"
-        />
-      </transition>
+      <img
+        v-if="!currentActionImage"
+        :src="currentImage"
+        alt="XiaoHei"
+        class="pet-image"
+      />
 
       <!-- 心情增加动画 -->
       <transition name="float-up">
@@ -176,6 +172,7 @@ const showControls = ref(false)
 const showEmotionIncrease = ref(false)
 const showTip = ref(false)
 const tipMessage = ref('')
+const isClicked = ref(false)
 
 const toggleStatus = () => {
   showStatus.value = !showStatus.value
@@ -195,10 +192,12 @@ const showTipMessage = (message: string) => {
 
 // 重写petPet方法以显示提示
 const handlePetPet = () => {
+  isClicked.value = true
   petPet()
   showEmotionIncrease.value = true
   setTimeout(() => {
     showEmotionIncrease.value = false
+    isClicked.value = false
   }, 1000)
   showTipMessage('摸摸小黑~')
 }
@@ -257,6 +256,7 @@ onMounted(() => {
   height: 120px;
   cursor: pointer;
   transition: transform 0.3s ease;
+  transform-origin: center center;
 }
 
 .pet-character:hover {
@@ -267,18 +267,20 @@ onMounted(() => {
   transform: scale(1.1);
 }
 
-.pet-character.emotion-normal {
-  animation: idle 2s ease-in-out infinite;
+.pet-character.is-clicked {
+  animation: click-bounce 0.5s ease-out;
 }
 
-.pet-character.emotion-sad {
-  transform: translateY(5px);
-  filter: brightness(0.9);
-}
-
-.pet-character.emotion-depressed {
-  transform: translateY(10px) scale(0.95);
-  filter: grayscale(50%) brightness(0.8);
+@keyframes click-bounce {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.15);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 
 .pet-image,
@@ -286,7 +288,6 @@ onMounted(() => {
   width: 100%;
   height: 100%;
   object-fit: contain;
-  image-rendering: pixelated;
 }
 
 .emotion-increase {
