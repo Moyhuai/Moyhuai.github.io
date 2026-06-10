@@ -15,7 +15,7 @@ interface MusicTrack {
 const musicFiles: MusicTrack[] = [
   {
     name: '再见',
-    artist: '张震岳',
+    artist: 'G.E.M.邓紫棋',
     url: new URL('/music/再见.mp3', import.meta.url).href,
     cover: 'https://p1.music.126.net/9YuflxGL7XFAfOnINEsdWw==/109951171358446171.jpg',
     lyricsFile: '/music/再见.lrc'
@@ -104,6 +104,8 @@ export function useMusic() {
   const playMode = ref<PlayMode>('sequential')
   const volume = ref(1)
   const isMuted = ref(false)
+  const currentTime = ref(0)
+  const duration = ref(0)
   let audioElement: HTMLAudioElement | null = null
   let currentTrackIndex = 0
 
@@ -144,6 +146,21 @@ export function useMusic() {
     audioElement.addEventListener('error', (e) => {
       console.error('音频播放错误:', e)
       playNext()
+    })
+
+    // 监听播放进度更新
+    audioElement.addEventListener('timeupdate', () => {
+      if (audioElement) {
+        currentTime.value = audioElement.currentTime
+        duration.value = audioElement.duration || 0
+      }
+    })
+
+    // 监听元数据加载完成
+    audioElement.addEventListener('loadedmetadata', () => {
+      if (audioElement) {
+        duration.value = audioElement.duration
+      }
     })
   }
 
@@ -387,6 +404,12 @@ export function useMusic() {
     }
   }
 
+  // 跳转到指定时间
+  const seekTo = (time: number) => {
+    if (!audioElement) return
+    audioElement.currentTime = Math.max(0, Math.min(time, duration.value || 0))
+  }
+
   return {
     isPlaying,
     currentTrack,
@@ -396,11 +419,14 @@ export function useMusic() {
     playMode,
     volume,
     isMuted,
+    currentTime,
+    duration,
     toggleMusic,
     togglePlayMode,
     toggleMute,
     setVolume,
     playNext,
-    playPrev
+    playPrev,
+    seekTo
   }
 }

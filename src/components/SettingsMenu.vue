@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { ref, computed, watch, onUnmounted } from 'vue'
 import {  PauseIcon, PlayIcon, Github, Mail, Heart, SkipBack, SkipForward, Shuffle, Repeat, Repeat1, Volume1, Volume2, VolumeX } from 'lucide-vue-next'
 import type { PlayMode } from '../composables/useMusic'
 
@@ -13,6 +13,8 @@ const props = defineProps<{
   playMode?: PlayMode
   volume?: number
   isMuted?: boolean
+  currentTime?: number
+  duration?: number
 }>()
 
 const emit = defineEmits<{
@@ -23,13 +25,15 @@ const emit = defineEmits<{
   playNext: []
   playPrev: []
   toggleMute: []
+  seekTo: [time: number]
 }>()
 
 // 进度条相关
 const progress = ref(0)
-const duration = ref(100)
-const currentTime = ref(0)
-const audioElement = ref<HTMLAudioElement | null>(null)
+const isHovering = ref(false)
+const isDragging = ref(false)
+const hoverPosition = ref(0)
+const hoverTime = ref(0)
 const playModeLabel = computed(() => {
   const mode = props.playMode || 'sequential'
   if (mode === 'sequential') return props.isChinese ? '顺序播放' : 'Sequential'
@@ -45,47 +49,92 @@ const volumeIcon = computed(() => {
   return Volume2
 })
 
-const formattedCurrentTime = computed(() => formatTime(currentTime.value))
-const formattedDuration = computed(() => formatTime(duration.value))
+const formattedCurrentTime = computed(() => formatTime(props.currentTime ?? 0))
+const formattedDuration = computed(() => formatTime(props.duration ?? 0))
 
 function formatTime(seconds: number): string {
+  if (!seconds || isNaN(seconds)) return '0:00'
   const mins = Math.floor(seconds / 60)
   const secs = Math.floor(seconds % 60)
   return `${mins}:${secs.toString().padStart(2, '0')}`
 }
 
-function updateProgress() {
-  if (audioElement.value) {
-    currentTime.value = audioElement.value.currentTime
-    duration.value = audioElement.value.duration || 100
-    progress.value = duration.value > 0 ? (currentTime.value / duration.value) * 100 : 0
-  }
-}
-
-let progressInterval: number | null = null
-
-onMounted(() => {
-  audioElement.value = document.querySelector('audio')
-  if (audioElement.value) {
-    progressInterval = window.setInterval(updateProgress, 100)
-  }
-})
-
-onUnmounted(() => {
-  if (progressInterval) {
-    clearInterval(progressInterval)
+// 监听进度变化
+watch([() => props.currentTime, () => props.duration], ([time, dur]) => {
+  if (dur && dur > 0) {
+    progress.value = ((time ?? 0) / dur) * 100
   }
 })
 
 function seekTo(event: MouseEvent) {
-  const target = event.target as HTMLDivElement
+  const target = event.currentTarget as HTMLDivElement
   const rect = target.getBoundingClientRect()
   const x = event.clientX - rect.left
   const percent = x / rect.width
-  if (audioElement.value) {
-    audioElement.value.currentTime = percent * (audioElement.value.duration || 100)
+  const duration = props.duration ?? 0
+  if (duration > 0) {
+    emit('seekTo', percent * duration)
   }
 }
+
+function handleMouseMove(event: MouseEvent) {
+  const target = event.currentTarget as HTMLDivElement
+  const rect = target.getBoundingClientRect()
+  const x = event.clientX - rect.left
+  const percent = Math.max(0, Math.min(1, x / rect.width))
+  hoverPosition.value = percent * 100
+  hoverTime.value = percent * (props.duration ?? 0)
+}
+
+function handleMouseEnter() {
+  isHovering.value = true
+}
+
+function handleMouseLeave() {
+  isHovering.value = false
+  if (isDragging.value) {
+    isDragging.value = false
+    document.removeEventListener('mousemove', handleGlobalMouseMove)
+    document.removeEventListener('mouseup', handleMouseUp)
+  }
+}
+
+function handleMouseDown(event: MouseEvent) {
+  isDragging.value = true
+  isHovering.value = true
+  handleMouseMove(event)
+  seekTo(event)
+  
+  document.addEventListener('mousemove', handleGlobalMouseMove)
+  document.addEventListener('mouseup', handleMouseUp)
+}
+
+function handleGlobalMouseMove(event: MouseEvent) {
+  if (!isDragging.value) return
+  const target = event.currentTarget as HTMLDivElement
+  const progressBar = document.querySelector('.progress-bar-wrapper')
+  if (!progressBar) return
+  
+  const rect = progressBar.getBoundingClientRect()
+  const x = event.clientX - rect.left
+  const percent = Math.max(0, Math.min(1, x / rect.width))
+  hoverPosition.value = percent * 100
+  hoverTime.value = percent * (props.duration ?? 0)
+  emit('seekTo', percent * (props.duration ?? 0))
+}
+
+function handleMouseUp() {
+  isDragging.value = false
+  document.removeEventListener('mousemove', handleGlobalMouseMove)
+  document.removeEventListener('mouseup', handleMouseUp)
+}
+
+const formattedHoverTime = computed(() => formatTime(hoverTime.value))
+
+onUnmounted(() => {
+  document.removeEventListener('mousemove', handleGlobalMouseMove)
+  document.removeEventListener('mouseup', handleMouseUp)
+})
 
 
 </script>
@@ -164,12 +213,41 @@ function seekTo(event: MouseEvent) {
         <div class="flex items-center gap-2 w-full max-w-xs">
           <span class="text-xs text-gray-500 dark:text-gray-400 w-10">{{ formattedCurrentTime }}</span>
           <div
-            class="progress-bar flex-1 h-2 bg-gray-200 dark:bg-gray-700 rounded-full cursor-pointer overflow-hidden"
+            class="progress-bar-wrapper relative flex-1 group cursor-pointer"
             @click="seekTo"
+            @mousedown="handleMouseDown"
+            @mousemove="handleMouseMove"
+            @mouseenter="handleMouseEnter"
+            @mouseleave="handleMouseLeave"
           >
+            <!-- 悬停时间提示 -->
             <div
-              class="progress h-full bg-[var(--theme)] rounded-full transition-all duration-100"
-              :style="{ width: `${progress}%` }"
+              v-if="isHovering"
+              class="absolute -top-6 left-0 transform -translate-x-1/2 bg-gray-800 dark:bg-gray-600 text-white text-xs px-2 py-1 rounded pointer-events-none whitespace-nowrap z-10"
+              :style="{ left: `${hoverPosition}%` }"
+            >
+              {{ formattedHoverTime }}
+            </div>
+            <!-- 进度条背景 -->
+            <div class="progress-bar h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden group-hover:h-3 transition-all duration-200">
+              <!-- 已播放进度 -->
+              <div
+                class="progress h-full bg-[var(--theme)] rounded-full transition-all duration-100 relative"
+                :style="{ width: `${progress}%` }"
+              >
+                <!-- 悬停预览进度 -->
+                <div
+                  v-if="isHovering"
+                  class="absolute inset-y-0 left-0 bg-[var(--theme)] opacity-30"
+                  :style="{ width: `${hoverPosition}%` }"
+                ></div>
+              </div>
+            </div>
+            <!-- 悬停指示点 -->
+            <div
+              v-if="isHovering"
+              class="absolute top-1/2 -translate-y-1/2 w-3 h-3 bg-[var(--theme)] rounded-full shadow-md pointer-events-none group-hover:scale-110 transition-transform duration-200"
+              :style="{ left: `calc(${hoverPosition}% - 6px)` }"
             ></div>
           </div>
           <span class="text-xs text-gray-500 dark:text-gray-400 w-10">{{ formattedDuration }}</span>

@@ -50,7 +50,7 @@ onMounted(() => {
 // 使用 Composables
 const { isDarkMode, toggleDarkMode } = useDarkMode()
 const { isChinese, toggleLanguage } = useLanguage()
-const { isPlaying: isMusicPlaying, currentTrack, currentArtist, currentCover, toggleMusic, playNext, playPrev, playMode, togglePlayMode, volume, isMuted, toggleMute } = useMusic()
+const { isPlaying: isMusicPlaying, currentTrack, currentArtist, currentCover, toggleMusic, playNext, playPrev, playMode, togglePlayMode, volume, isMuted, toggleMute, currentTime: musicCurrentTime, duration: musicDuration, seekTo } = useMusic()
 
 
 // 获取当前时间
@@ -193,6 +193,8 @@ const toggleSettings = () => {
             :play-mode="playMode"
             :volume="volume"
             :is-muted="isMuted"
+            :current-time="musicCurrentTime"
+            :duration="musicDuration"
             @toggle-dark-mode="toggleDarkMode"
             @toggle-music="toggleMusic"
             @toggle-language="toggleLanguage"
@@ -200,6 +202,7 @@ const toggleSettings = () => {
             @play-next="playNext"
             @play-prev="playPrev"
             @toggle-mute="toggleMute"
+            @seek-to="seekTo"
           />
         </div>
 
@@ -236,7 +239,7 @@ const toggleSettings = () => {
             <!-- 名言卡片 -->
             <div class="bg-sky-50/80 dark:bg-gray-800/60 backdrop-blur-md rounded-2xl p-6 shadow-md border border-sky-100/50 dark:border-gray-700/50">
               <div class="flex items-start gap-3">
-                <span class="text-xl text-gray-700 dark:text-gray-300 font-serif italic">"知识不能替代友谊，比起失去你，我宁愿做个笨蛋。</span>
+                <span class="text-lg text-gray-700 dark:text-gray-300 font-serif italic font-bold">"不管遇到什么事都要一笑而过。</span>
                
               </div>
             </div>
@@ -249,7 +252,7 @@ const toggleSettings = () => {
           <div class="float-right w-full md:w-[calc(50%-12px)] space-y-6">
             <!-- 时间卡片 -->
             <div
-              class="max-w-md bg-linear-to-br from-sky-200/80 to-teal-200/80 dark:from-gray-700/80 dark:to-gray-600/80 backdrop-blur-md rounded-2xl p-6 shadow-lg">
+              class="bg-linear-to-br from-sky-200/80 to-teal-200/80 dark:from-gray-700/80 dark:to-gray-600/80 backdrop-blur-md rounded-2xl p-6 shadow-lg">
               <div class="text-4xl md:text-5xl font-bold text-gray-800 dark:text-gray-100 mb-3 font-mono">
                 {{ timeString }}
               </div>
