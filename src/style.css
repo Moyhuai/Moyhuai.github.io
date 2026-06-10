@@ -392,8 +392,8 @@ html, body {
 
 /* 黑胶唱片样式 */
 .vinyl-disc {
-  width: 128px;
-  height: 128px;
+  width: 96px;
+  height: 96px;
   border-radius: 50%;
   background:
     radial-gradient(circle, #333 15%, transparent 16%),

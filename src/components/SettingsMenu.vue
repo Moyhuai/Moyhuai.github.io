@@ -130,8 +130,8 @@ function seekTo(event: MouseEvent) {
     <!-- 音乐播放器 -->
     <div class="player cursor-pointer" style="--theme: var(--color-player-theme);">
       <!-- 封面和歌曲信息 -->
-      <div class="flex justify-center items-center mb-4">
-        <div class="cover-container relative w-32 h-32">
+      <div class="flex justify-center items-center mb-3">
+        <div class="cover-container relative w-24 h-24">
           <div
             class="vinyl-disc"
             :class="{ 'rotating': isMusicPlaying, 'hidden': !isMusicPlaying }"
@@ -141,30 +141,30 @@ function seekTo(event: MouseEvent) {
             :src="currentCover"
             :alt="currentTrack || 'Album cover'"
             class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 shadow-lg object-cover transition-all duration-500 z-10"
-            :class="isMusicPlaying ? 'w-18 h-18 rounded-full rotating' : 'w-32 h-32 rounded-lg'"
+            :class="isMusicPlaying ? 'w-14 h-14 rounded-full rotating' : 'w-24 h-24 rounded-lg'"
             @error="(e) => (e.target as HTMLImageElement).src = '/avatar.png'"
           />
         </div>
         <div class="info-container flex-1 min-w-0 ml-2 max-w-48">
           <div class="name-artist">
-            <div class="name text-lg font-semibold text-gray-800 dark:text-gray-200 truncate text-center max-h-7">
+            <div class="name text-base font-semibold text-gray-800 dark:text-gray-200 truncate text-center max-h-6">
               {{ currentTrack || (isChinese ? '未选择歌曲' : 'No song selected') }}
             </div>
-            <div class="artist text-base text-gray-500 dark:text-gray-400 text-center truncate max-h-6">
+            <div class="artist text-sm text-gray-500 dark:text-gray-400 text-center truncate max-h-5">
               {{ currentArtist || (isChinese ? '未知歌手' : 'Unknown Artist') }}
             </div>
           </div>
-          <div class="cur-lyric text-sm text-gray-400 dark:text-gray-500 mt-1 text-center truncate max-h-5">
+          <div class="cur-lyric text-xs text-gray-400 dark:text-gray-500 mt-0.5 text-center truncate max-h-4">
             作曲 : {{ currentArtist || (isChinese ? '未知' : 'Unknown') }}
           </div>
         </div>
       </div>
       <!-- 进度条 -->
-      <div class="progress-bar-container mx-2 mb-4 flex justify-center">
+      <div class="progress-bar-container mx-2 mb-3 flex justify-center">
         <div class="flex items-center gap-2">
           <span class="text-xs text-gray-500 dark:text-gray-400 w-10">{{ formattedCurrentTime }}</span>
           <div
-            class="progress-bar w-80 h-2 bg-gray-200 dark:bg-gray-700 rounded-full cursor-pointer overflow-hidden"
+            class="progress-bar w-64 h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full cursor-pointer overflow-hidden"
             @click="seekTo"
           >
             <div
@@ -176,7 +176,7 @@ function seekTo(event: MouseEvent) {
         </div>
       </div>
       <!-- 控制按钮 -->
-      <div class="controls flex items-center justify-center gap-5">
+      <div class="controls flex items-center justify-center gap-3">
         <div
           class="control order p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors cursor-pointer"
           :title="playModeLabel"
@@ -194,12 +194,12 @@ function seekTo(event: MouseEvent) {
           <SkipBack :size="20" class="text-gray-500 dark:text-gray-400" />
         </div>
         <div
-          class="control play w-14 h-14 rounded-full bg-[var(--theme)] flex items-center justify-center cursor-pointer hover:opacity-90 transition-opacity shadow-md"
+          class="control play w-11 h-11 rounded-full bg-[var(--theme)] flex items-center justify-center cursor-pointer hover:opacity-90 transition-opacity shadow-md"
           :title="isChinese ? (isMusicPlaying ? '暂停' : '播放') : (isMusicPlaying ? 'Pause' : 'Play')"
           @click="$emit('toggleMusic')"
         >
-          <PauseIcon v-if="isMusicPlaying" :size="28" class="text-white" />
-          <PlayIcon v-else :size="28" class="text-white" />
+          <PauseIcon v-if="isMusicPlaying" :size="22" class="text-white" />
+          <PlayIcon v-else :size="22" class="text-white" />
         </div>
         <div
           class="control next p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors cursor-pointer"
