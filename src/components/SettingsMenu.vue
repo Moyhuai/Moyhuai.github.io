@@ -160,11 +160,11 @@ function seekTo(event: MouseEvent) {
         </div>
       </div>
       <!-- 进度条 -->
-      <div class="progress-bar-container mx-2 mb-4 flex justify-center">
-        <div class="flex items-center gap-2">
+      <div class="progress-bar-container mx-2 mb-4 flex justify-center h-full">
+        <div class="flex items-center gap-2 w-full max-w-xs">
           <span class="text-xs text-gray-500 dark:text-gray-400 w-10">{{ formattedCurrentTime }}</span>
           <div
-            class="progress-bar w-80 h-2 bg-gray-200 dark:bg-gray-700 rounded-full cursor-pointer overflow-hidden"
+            class="progress-bar flex-1 h-2 bg-gray-200 dark:bg-gray-700 rounded-full cursor-pointer overflow-hidden"
             @click="seekTo"
           >
             <div
