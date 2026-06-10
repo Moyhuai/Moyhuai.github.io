@@ -30,10 +30,8 @@ const emit = defineEmits<{
 
 // 进度条相关
 const progress = ref(0)
-const isHovering = ref(false)
 const isDragging = ref(false)
-const hoverPosition = ref(0)
-const hoverTime = ref(0)
+const progressBarRef = ref<HTMLDivElement | null>(null)
 const playModeLabel = computed(() => {
   const mode = props.playMode || 'sequential'
   if (mode === 'sequential') return props.isChinese ? '顺序播放' : 'Sequential'
@@ -66,43 +64,26 @@ watch([() => props.currentTime, () => props.duration], ([time, dur]) => {
   }
 })
 
-function seekTo(event: MouseEvent) {
-  const target = event.currentTarget as HTMLDivElement
-  const rect = target.getBoundingClientRect()
+function getPercentFromEvent(event: MouseEvent): number {
+  const progressBar = progressBarRef.value
+  if (!progressBar) return 0
+  
+  const rect = progressBar.getBoundingClientRect()
   const x = event.clientX - rect.left
-  const percent = x / rect.width
+  return Math.max(0, Math.min(1, x / rect.width))
+}
+
+function seekTo(event: MouseEvent) {
+  const percent = getPercentFromEvent(event)
   const duration = props.duration ?? 0
   if (duration > 0) {
     emit('seekTo', percent * duration)
   }
 }
 
-function handleMouseMove(event: MouseEvent) {
-  const target = event.currentTarget as HTMLDivElement
-  const rect = target.getBoundingClientRect()
-  const x = event.clientX - rect.left
-  const percent = Math.max(0, Math.min(1, x / rect.width))
-  hoverPosition.value = percent * 100
-  hoverTime.value = percent * (props.duration ?? 0)
-}
-
-function handleMouseEnter() {
-  isHovering.value = true
-}
-
-function handleMouseLeave() {
-  isHovering.value = false
-  if (isDragging.value) {
-    isDragging.value = false
-    document.removeEventListener('mousemove', handleGlobalMouseMove)
-    document.removeEventListener('mouseup', handleMouseUp)
-  }
-}
-
 function handleMouseDown(event: MouseEvent) {
+  event.preventDefault()
   isDragging.value = true
-  isHovering.value = true
-  handleMouseMove(event)
   seekTo(event)
   
   document.addEventListener('mousemove', handleGlobalMouseMove)
@@ -111,15 +92,8 @@ function handleMouseDown(event: MouseEvent) {
 
 function handleGlobalMouseMove(event: MouseEvent) {
   if (!isDragging.value) return
-  const target = event.currentTarget as HTMLDivElement
-  const progressBar = document.querySelector('.progress-bar-wrapper')
-  if (!progressBar) return
   
-  const rect = progressBar.getBoundingClientRect()
-  const x = event.clientX - rect.left
-  const percent = Math.max(0, Math.min(1, x / rect.width))
-  hoverPosition.value = percent * 100
-  hoverTime.value = percent * (props.duration ?? 0)
+  const percent = getPercentFromEvent(event)
   emit('seekTo', percent * (props.duration ?? 0))
 }
 
@@ -128,8 +102,6 @@ function handleMouseUp() {
   document.removeEventListener('mousemove', handleGlobalMouseMove)
   document.removeEventListener('mouseup', handleMouseUp)
 }
-
-const formattedHoverTime = computed(() => formatTime(hoverTime.value))
 
 onUnmounted(() => {
   document.removeEventListener('mousemove', handleGlobalMouseMove)
@@ -213,41 +185,23 @@ onUnmounted(() => {
         <div class="flex items-center gap-2 w-full max-w-xs">
           <span class="text-xs text-gray-500 dark:text-gray-400 w-10">{{ formattedCurrentTime }}</span>
           <div
-            class="progress-bar-wrapper relative flex-1 group cursor-pointer"
+            ref="progressBarRef"
+            class="progress-bar-wrapper relative flex-1 cursor-pointer"
             @click="seekTo"
             @mousedown="handleMouseDown"
-            @mousemove="handleMouseMove"
-            @mouseenter="handleMouseEnter"
-            @mouseleave="handleMouseLeave"
           >
-            <!-- 悬停时间提示 -->
-            <div
-              v-if="isHovering"
-              class="absolute -top-6 left-0 transform -translate-x-1/2 bg-gray-800 dark:bg-gray-600 text-white text-xs px-2 py-1 rounded pointer-events-none whitespace-nowrap z-10"
-              :style="{ left: `${hoverPosition}%` }"
-            >
-              {{ formattedHoverTime }}
-            </div>
             <!-- 进度条背景 -->
-            <div class="progress-bar h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden group-hover:h-3 transition-all duration-200">
+            <div class="progress-bar h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
               <!-- 已播放进度 -->
               <div
-                class="progress h-full bg-[var(--theme)] rounded-full transition-all duration-100 relative"
+                class="progress h-full bg-[var(--theme)] rounded-full relative"
                 :style="{ width: `${progress}%` }"
-              >
-                <!-- 悬停预览进度 -->
-                <div
-                  v-if="isHovering"
-                  class="absolute inset-y-0 left-0 bg-[var(--theme)] opacity-30"
-                  :style="{ width: `${hoverPosition}%` }"
-                ></div>
-              </div>
+              ></div>
             </div>
-            <!-- 悬停指示点 -->
+            <!-- 拖拽手柄 -->
             <div
-              v-if="isHovering"
-              class="absolute top-1/2 -translate-y-1/2 w-3 h-3 bg-[var(--theme)] rounded-full shadow-md pointer-events-none group-hover:scale-110 transition-transform duration-200"
-              :style="{ left: `calc(${hoverPosition}% - 6px)` }"
+              class="absolute top-1/2 -translate-y-1/2 w-3 h-3 bg-[var(--theme)] rounded-full shadow-md"
+              :style="{ left: `calc(${progress}% - 6px)` }"
             ></div>
           </div>
           <span class="text-xs text-gray-500 dark:text-gray-400 w-10">{{ formattedDuration }}</span>
