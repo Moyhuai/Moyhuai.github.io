@@ -6,6 +6,7 @@ import ProjectList from './components/ProjectList.vue'
 import SettingsMenu from './components/SettingsMenu.vue'
 import BackgroundBlobs from './components/BackgroundBlobs.vue'
 import DesktopPet from './components/DesktopPet.vue'
+import RepoModal from './components/RepoModal.vue'
 import { useDarkMode } from './composables/useDarkMode'
 import { useLanguage } from './composables/useLanguage'
 import { useMusic } from './composables/useMusic'
@@ -17,6 +18,7 @@ import { Menu } from 'lucide-vue-next'
 
 
 const showSettings = ref(false)
+const showRepoModal = ref(false)
 const isLoaded = ref(false)
 const currentQuote = ref('')
 
@@ -276,6 +278,7 @@ const toggleSettings = () => {
             <!-- 展示更多按钮 -->
             <div class="text-center">
               <button
+                @click="showRepoModal = true"
                 class="px-20 py-3 bg-sky-100/80 dark:bg-gray-800/80 backdrop-blur-md rounded-full text-gray-700 dark:text-gray-300 hover:bg-sky-200/80 dark:hover:bg-gray-700/80 transition-all duration-300 hover:scale-105">
                 <span class="flex items-center justify-center gap-2">
                   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-folder-git2-icon lucide-folder-git-2"><path d="M18 19a5 5 0 0 1-5-5v8"></path><path d="M9 20H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h3.9a2 2 0 0 1 1.69.9l.81 1.2a2 2 0 0 0 1.67.9H20a2 2 0 0 1 2 2v5"></path><circle cx="13" cy="12" r="2"></circle><circle cx="20" cy="19" r="2"></circle></svg>
@@ -293,6 +296,13 @@ const toggleSettings = () => {
 
     <!-- 桌面宠物 -->
     <DesktopPet :sidebar-open="showSettings" />
+
+    <!-- 仓库模态框 -->
+    <RepoModal
+      v-if="showRepoModal"
+      github-username="moyhuai"
+      @close="showRepoModal = false"
+    />
   </div>
 </template>
 

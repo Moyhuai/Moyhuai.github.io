@@ -15,8 +15,8 @@ interface GitHubRepo {
   homepage: string | null
 }
 
-const CACHE_KEY = 'github_projects_cache'
-const CACHE_EXPIRY_KEY = 'github_projects_cache_expiry'
+const CACHE_KEY = 'github_latest_project_cache'
+const CACHE_EXPIRY_KEY = 'github_latest_project_cache_expiry'
 const CACHE_DURATION = 1 * 60 * 60 * 1000 // 1小时缓存
 
 export function useGitHubProjects(username: string = 'moyhuai') {
@@ -71,7 +71,7 @@ export function useGitHubProjects(username: string = 'moyhuai') {
       error.value = null
 
       // 获取用户的公共仓库
-      const response = await fetch(`https://api.github.com/users/${username}/repos?sort=updated&per_page=10`)
+      const response = await fetch(`https://api.github.com/users/${username}/repos?sort=updated&per_page=1`)
       
       if (!response.ok) {
         throw new Error(`GitHub API 请求失败: ${response.status}`)
